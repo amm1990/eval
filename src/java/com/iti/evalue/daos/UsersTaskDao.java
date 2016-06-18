@@ -48,4 +48,11 @@ public class UsersTaskDao {
         session.getTransaction().commit();
         return ut;
     }
+    
+    public void updateUsersTask(UsersTask update) {
+        session = sessionFactory.getCurrentSession();
+        session.beginTransaction();
+        session.merge(update);
+        session.getTransaction().commit();
+    }
 }
