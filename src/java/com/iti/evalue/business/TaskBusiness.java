@@ -133,21 +133,27 @@ public class TaskBusiness {
         return deleted;
     }
 
-    public boolean assignUserToTask(Task task, Users user) {
+    public boolean assignUserToTask(Users owner, Task task, Users user) {
         boolean added = false;
-        if (task != null && user != null) {
-            List<UsersTask> list = task.getUsersTaskList();
-            boolean exists = false;
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getUserId().equals(user)) {
-                    exists = true;
-                }
-                if (!exists) {
-                    UsersTask ut = new UsersTask();
-                    ut.setUserId(user);
-                    ut.setTaskId(task);
-                    utd.addUserToTask(ut);
-                    added = true;
+        if (task != null && user != null && owner != null) {
+            if (owner.equals(task.getOwnerId())) {
+                List<UsersTask> list = task.getUsersTaskList();
+                boolean exists = false;
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i).getUserId().equals(user)) {
+                        exists = true;
+                    }
+                    if (!exists) {
+                        UsersTask ut = new UsersTask();
+                        ut.setUserId(user);
+                        ut.setTaskId(task);
+                        ut.setAchievement(0);
+                        ut.setApproval("disapproved");
+                        utd.addUserToTask(ut);
+                        String body = owner.getName() + " added you to the task " + task.getName();
+                        Notifier.send(user.getToken(), body);
+                        added = true;
+                    }
                 }
             }
         }
@@ -188,10 +194,10 @@ public class TaskBusiness {
         if (task != null && user != null) {
             UsersTask ut = utd.selectAssignment(user, task);
             ut.setAchievement(eval);
-            Notifier notifier = new Notifier();
+            utd.updateUsersTask(ut);
             String Notificationbody = "user " + user.getName() + " submitted their achievement for "
                     + task.getName() + " task and is requesting your approval";
-            notifier.send(task.getOwnerId().getToken(), Notificationbody);
+            Notifier.send(task.getOwnerId().getToken(), Notificationbody);
             submitted = true;
         }
         return submitted;
