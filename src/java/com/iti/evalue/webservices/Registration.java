@@ -43,12 +43,29 @@ public class Registration {
             Users user = new Users(parent, name, password, email, gender, token);
             registered = ub.register(user);
         }
- 
+
         try {
             registration.put("status", registered);
         } catch (JSONException ex) {
             Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
         }
         return registration;
+    }
+
+    @GET
+    @Path("/test")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public JSONObject imageCall(@QueryParam("image") String imageCode) {
+        JSONObject json = new JSONObject();
+        UserBusiness ub = new UserBusiness();
+        ub.addImage();
+//        //String im = ub.readImage();
+//        try {
+//            json.put("image", im);
+//        } catch (JSONException ex) {
+//            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+        return json;
     }
 }

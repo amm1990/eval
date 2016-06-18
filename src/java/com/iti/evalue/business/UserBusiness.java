@@ -9,6 +9,7 @@ import com.iti.evalue.daos.UserDao;
 import com.iti.evalue.entities.Users;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -25,8 +26,9 @@ import javax.mail.internet.MimeMessage;
  * @author Aya Mahmoud
  */
 public class UserBusiness {
-    
+
     UserDao ud;
+
     public UserBusiness() {
         ud = new UserDao();
     }
@@ -38,31 +40,28 @@ public class UserBusiness {
         Users u2;
         if ((u.getName() != null) && (u.getGender() != null) && (u.getPassword() != null)) {
             u2 = ud.selectByUser(u.getName());
-            if(u.getEmail()!=null) {
+            if (u.getEmail() != null) {
                 u1 = ud.selectByEmail(u.getEmail());
             }
-            if(u1!=null && u2!=null) {
-            result = "both";
-            }
-            else if(u1!=null && u2==null) {
+            if (u1 != null && u2 != null) {
+                result = "both";
+            } else if (u1 != null && u2 == null) {
                 result = "email";
-            }
-            else if(u1==null && u2!=null) {
+            } else if (u1 == null && u2 != null) {
                 result = "name";
-            }
-            else if(u1==null && u2==null) {
+            } else if (u1 == null && u2 == null) {
                 ud.userAdd(u);
                 result = "success";
             }
         }
         return result;
     }
-    
+
     ///used for forgot password
     public boolean checkNameExists(String name) {
         boolean exists = true;
         Users user = ud.selectByUser(name);
-        if(user==null) {
+        if (user == null) {
             exists = false;
         }
         return exists;
@@ -75,51 +74,62 @@ public class UserBusiness {
         user.setPassword(password);
         return ud.checkExists(user);
     }
-    
+
     //used for view profile
     public Users viewUser(String name) {
         Users user = ud.selectByUser(name);
         return user;
     }
-    
+
     //used for editing profile
-    public boolean updateUser(Users user) {
-        boolean updated = false;
+    public String updateUser(Users user) {
+        String updated = "fail";
         Users u = ud.selectById(user.getId());
-        if(u!=null) {
-            u.setName(user.getName());
-            u.setPassword(user.getPassword());
-            u.setEmail(user.getEmail());
-            u.setGender(user.getGender());
-            ud.updateUser(u);
-            updated = true;
+        if (u != null) {
+            Users u1 = ud.selectByUser(u.getName());
+            Users u2 = ud.selectByEmail(u.getEmail());
+            if (u1 != null && u2 != null) {
+                updated = "both";
+            } else if (u1 != null && u2 == null) {
+                updated = "name";
+            } else if (u1 == null && u2 != null) {
+                updated = "email";
+            } else if (u1 == null && u2 == null) {
+
+                u.setName(user.getName());
+                u.setPassword(user.getPassword());
+                u.setEmail(user.getEmail());
+                u.setGender(user.getGender());
+                ud.updateUser(u);
+                updated = "success";
+            }
         }
         return updated;
     }
-    
+
     //used for forgot password
     public boolean updatePassword(String name, String password) {
         boolean updated = false;
         Users user = ud.selectByUser(name);
-        if(user!=null) {
+        if (user != null) {
             user.setPassword(password);
             ud.updateUser(user);
             updated = true;
         }
         return updated;
     }
-    
+
     public List<Users> getChildAccounts(String parent_name) {
         List<Users> children = null;
         Users parent = ud.selectByUser(parent_name);
-        if(parent!=null) {
+        if (parent != null) {
             children = parent.getUsersList();
         }
         return children;
     }
-    
+
     public boolean sendPasswordMail(Users user) {
-        String newPassword = new BigInteger(30, new SecureRandom()).toString(32) ;
+        String newPassword = new BigInteger(30, new SecureRandom()).toString(32);
         boolean sent = false;
         String to = user.getEmail();
         String username = "maedzms@gmail.com";
@@ -153,12 +163,33 @@ public class UserBusiness {
         ud.updateUser(user);
         return sent;
     }
-        // get user id for achievement service..    
-    public int getUserIdByName(String userName)
-    {
+    // get user id for achievement service..    
+
+    public int getUserIdByName(String userName) {
         int uid;
         Users u = ud.selectByUser(userName);
-        uid =  u.getId();
+        uid = u.getId();
         return uid;
     }
+///dummy methods to testimage sending
+
+    public void addImage() {
+        String dd = "hellooooo newjersey";
+        byte[] data = dd.getBytes();
+        String ds = Base64.getEncoder().encodeToString(data);
+        byte[] result = Base64.getDecoder().decode(ds);
+        System.out.println(result + "   " + result.toString());
+
+        //String coded = Base64.getEncoder().encodeToString(image);
+        //return coded;
+        //Users user = ud.selectByUser("aya");
+        //user.setImage(data);
+        //ud.updateUser(user);
+    }
+
+//    public String readImage() {
+//        byte[] image = ud.selectByUser("aya").getImage();
+//        String coded = Base64.getEncoder().encodeToString(image);
+//        return coded;
+//    }
 }
