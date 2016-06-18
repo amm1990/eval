@@ -121,15 +121,16 @@ public class TaskServices {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/adduser")
-    public JSONObject addUsers(@QueryParam("user") String user, @QueryParam("task") String task) {
+    public JSONObject addUsers(@QueryParam("owner") String owner, @QueryParam("user") String user, @QueryParam("task") String task) {
         UserBusiness ub = new UserBusiness();
         TaskBusiness tb = new TaskBusiness();
         JSONObject json = new JSONObject();
         String added = "not_added";
-        if (user != null && task != null) {
+        if (user != null && task != null && owner != null) {
+            Users o = ub.viewUser(owner);
             Users u = ub.viewUser(user);
             Task t = tb.getTaskByName(task);
-            if (tb.assignUserToTask(t, u)) {
+            if (tb.assignUserToTask(o, t, u)) {
                 added = "added";
             }
         }
