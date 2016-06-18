@@ -138,41 +138,47 @@ public class TaskBusiness {
         if (task != null && user != null && owner != null) {
             if (owner.equals(task.getOwnerId())) {
                 List<UsersTask> list = task.getUsersTaskList();
+                System.out.println(list);
                 boolean exists = false;
                 for (int i = 0; i < list.size(); i++) {
                     if (list.get(i).getUserId().equals(user)) {
                         exists = true;
+                        System.out.println("user exists ya 3'aby");
                     }
-                    if (!exists) {
-                        UsersTask ut = new UsersTask();
-                        ut.setUserId(user);
-                        ut.setTaskId(task);
-                        ut.setAchievement(0);
-                        ut.setApproval("disapproved");
-                        utd.addUserToTask(ut);
-                        String body = owner.getName() + " added you to the task " + task.getName();
-                        Notifier.send(user.getToken(), body);
-                        added = true;
-                    }
+                }
+                if (!exists) {
+                    UsersTask ut = new UsersTask();
+                    ut.setUserId(user);
+                    ut.setTaskId(task);
+                    ut.setAchievement(0);
+                    ut.setApproval("disapproved");
+                    utd.addUserToTask(ut);
+                    String body = owner.getName() + " added you to the task " + task.getName();
+                    Notifier.send(user.getToken(), body);
+                    added = true;
                 }
             }
         }
         return added;
     }
 
-    public boolean removeUserFromTask(Task task, Users user) {
+    public boolean removeUserFromTask(Users owner, Task task, Users user) {
         boolean removed = false;
-        if (task != null && user != null) {
-            List<UsersTask> list = task.getUsersTaskList();
-            UsersTask ut = null;
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getUserId().equals(user)) {
-                    ut = list.get(i);
+        if (task != null && user != null && owner != null) {
+            if (owner.equals(task.getOwnerId())) {
+                List<UsersTask> list = task.getUsersTaskList();
+                UsersTask ut = null;
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i).getUserId().equals(user)) {
+                        ut = list.get(i);
+                    }
                 }
-            }
-            if (ut != null) {
-                utd.deleteUserFromTask(ut);
-                removed = true;
+                if (ut != null) {
+                    utd.deleteUserFromTask(ut);
+                    String body = owner.getName() + " removed you from " + task.getName() + " task";
+                    Notifier.send(user.getToken(), body);
+                    removed = true;
+                }
             }
         }
         return removed;
