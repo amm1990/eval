@@ -108,27 +108,39 @@ public class TaskBusiness {
         return result;
     }
 
-    // get task  by owner_id & task-name &     user-name
-    public Task getTaskByNameAndOwnerName(String taskName, String userName) {
-
-        UserBusiness ub = new UserBusiness();
-        int userId = ub.getUserIdByName(userName);
-        Task task;
-        TaskDao t = new TaskDao();
-        int taskId = t.selectByOwnerIdAndTaskName(userId, taskName);
-        task = t.selectById(taskId);
-        return task;
-    }
+//    // get task  by owner_id & task-name &     user-name
+//    public Task getTaskByNameAndOwnerName(String taskName, String userName) {
+//
+//        UserBusiness ub = new UserBusiness();
+//        int userId = ub.getUserIdByName(userName);
+//        Task task;
+//        TaskDao t = new TaskDao();
+//        int taskId = t.selectByOwnerIdAndTaskName(userId, taskName);
+//        task = t.selectById(taskId);
+//        return task;
+//    }
 
     //used for task deletion
-    public boolean deleteTask(String name) {
+    public boolean deleteTask(String owner, String name) {
         boolean deleted = false;
-        Task task = td.selectByName(name);
-        if (task != null) {
-            for (int i = 0; i < task.getTaskList().size(); i++) {
-                td.deleteTask(task.getTaskList().get(i));
+        if (owner != null && name != null) {
+            Task task = td.selectByName(name);
+            Users o = ud.selectByUser(owner);
+            if (task != null && o != null) {
+               if (task.getOwnerId().equals(o)) {
+                   List<Task> list = task.getTaskList();
+                    for (int i = 0; i < list.size(); i++) {
+                        td.deleteTask(list.get(i));
+                    }
+                    List<UsersTask> assignments = task.getUsersTaskList();
+                    td.deleteTask(task);
+                    deleted = true;
+                    for(int i=0; i < assignments.size(); i++) {
+                        String body = o + " has deleted " + name + " task";
+                        Notifier.send(assignments.get(i).getUserId().getToken(), body);
+                    }
+                }
             }
-            deleted = td.deleteTask(task);
         }
         return deleted;
     }
@@ -143,7 +155,6 @@ public class TaskBusiness {
                 for (int i = 0; i < list.size(); i++) {
                     if (list.get(i).getUserId().equals(user)) {
                         exists = true;
-                        System.out.println("user exists ya 3'aby");
                     }
                 }
                 if (!exists) {

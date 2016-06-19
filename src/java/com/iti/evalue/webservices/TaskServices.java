@@ -106,12 +106,12 @@ public class TaskServices {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/delete")
-    public JSONObject deleteTask(@QueryParam("taskname") String name) {
+    public JSONObject deleteTask(@QueryParam("owner") String owner, @QueryParam("taskname") String name) {
         TaskBusiness tb = new TaskBusiness();
-        boolean deleted = tb.deleteTask(name);
+        boolean deleted = tb.deleteTask(owner, name);
         JSONObject json = new JSONObject();
         try {
-            json.put("deleted", "'" + deleted + "'");
+            json.put("deleted", deleted);
         } catch (JSONException ex) {
             Logger.getLogger(TaskServices.class.getName()).log(Level.SEVERE, null, ex);
         }

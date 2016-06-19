@@ -88,11 +88,12 @@ public class UserBusiness {
         if (u != null) {
             Users u1 = ud.selectByUser(u.getName());
             Users u2 = ud.selectByEmail(u.getEmail());
-            if (u1 != null && u2 != null) {
+            //need to check if the similar values are not for the same user
+            if (u1 != null && u2 != null && !u1.equals(u) && !u2.equals(u)) {
                 updated = "both";
-            } else if (u1 != null && u2 == null) {
+            } else if (u1 != null && u2 == null && !u1.equals(u)) {
                 updated = "name";
-            } else if (u1 == null && u2 != null) {
+            } else if (u1 == null && u2 != null && !u2.equals(u)) {
                 updated = "email";
             } else if (u1 == null && u2 == null) {
 
@@ -130,49 +131,23 @@ public class UserBusiness {
 
     public boolean sendPasswordMail(Users user) {
         String newPassword = new BigInteger(30, new SecureRandom()).toString(32);
-        boolean sent = false;
         String to = user.getEmail();
-        String username = "maedzms@gmail.com";
-        String password = "p2ssw0rd";
         String subject = "evalue app password";
         String body = "Your evalue application password has been reset to \"" + newPassword + "\"";
-        Properties properties = System.getProperties();
-        String host = "smtp.gmail.com";
-        properties.put("mail.smtp.starttls.enable", "true");
-        properties.put("mail.smtp.host", host);
-        properties.put("mail.smtp.user", username);
-        properties.put("mail.smtp.password", password);
-        properties.put("mail.smtp.port", "587");
-        properties.put("mail.smtp.auth", true);
-        Session session = Session.getDefaultInstance(properties, null);
-        MimeMessage message = new MimeMessage(session);
-        try {
-            message.setFrom(new InternetAddress(username));
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-            message.setSubject(subject);
-            message.setText(body);
-            Transport transport = session.getTransport("smtp");
-            transport.connect(host, username, password);
-            transport.sendMessage(message, message.getRecipients(Message.RecipientType.TO));
-            transport.close();
-            sent = true;
-        } catch (MessagingException ex) {
-            Logger.getLogger(UserBusiness.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        boolean sent = Mailer.sendMail(to, subject, body);
         user.setPassword(newPassword);
         ud.updateUser(user);
         return sent;
     }
     // get user id for achievement service..    
 
-    public int getUserIdByName(String userName) {
-        int uid;
-        Users u = ud.selectByUser(userName);
-        uid = u.getId();
-        return uid;
-    }
+//    public int getUserIdByName(String userName) {
+//        int uid;
+//        Users u = ud.selectByUser(userName);
+//        uid = u.getId();
+//        return uid;
+//    }
 ///dummy methods to testimage sending
-
     public void addImage() {
         String dd = "hellooooo newjersey";
         byte[] data = dd.getBytes();

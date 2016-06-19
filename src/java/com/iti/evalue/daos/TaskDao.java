@@ -54,17 +54,11 @@ public class TaskDao {
     }
 
     //Delete Task Info
-    public boolean deleteTask(Task deletedTask) {
-        boolean deleted = false;
+    public void deleteTask(Task deletedTask) {
         session = sessionFactory.getCurrentSession();
         session.beginTransaction();
-        if (deletedTask != null) {
-            session.delete(deletedTask);
-            session.getTransaction().commit();
-//            session.close();
-            deleted = true;
-        }
-        return deleted;
+        session.delete(deletedTask);
+        session.getTransaction().commit();
     }
 
     //Select from category by id

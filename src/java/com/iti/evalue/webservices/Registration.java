@@ -36,7 +36,7 @@ public class Registration {
         JSONObject registration = new JSONObject();
         Users parent = null;
         String registered = "failed";
-        if (name != null && password != null && email != null && gender != null && token != null) {
+        if (name != null && password != null && gender != null && token != null) {
             if (parentName != null) {
                 parent = ub.viewUser(parentName);
             }
