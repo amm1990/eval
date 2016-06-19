@@ -300,4 +300,16 @@ public class TaskServices {
         }
         return json;
     }
+    
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/approveachievement")
+    public void approveAchievement(@QueryParam("user") String user, @QueryParam("task") String task, 
+            @QueryParam("achievement") String approval) {
+        if(user != null && task != null && approval != null) {
+            TaskBusiness tb = new TaskBusiness();
+            tb.approveAchievement(user, task, approval);
+        }
+    }
 }

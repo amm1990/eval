@@ -11,10 +11,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -52,20 +54,14 @@ public class Registration {
         return registration;
     }
 
-    @GET
+    @POST
     @Path("/test")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public JSONObject imageCall(@QueryParam("image") String image) {
-        JSONObject json = new JSONObject();
-        UserBusiness ub = new UserBusiness();
-        ub.addImage(image);
-        //String im = ub.readImage();
-//        try {
-//            //json.put("image", im);
-//        } catch (JSONException ex) {
-//            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-        return json;
+    public void imageCall(@QueryParam("image") String image) {
+        if (image != null) {
+            UserBusiness ub = new UserBusiness();
+            ub.addImage(image);
+        }
     }
 }
