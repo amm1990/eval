@@ -40,30 +40,25 @@ public class TaskServices {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/create")
-    public JSONObject createTask(@QueryParam("taskname") String name, @QueryParam("description") String description,
+    @Path("/createtask")
+    public JSONObject createTask(@QueryParam("name") String name, @QueryParam("description") String description,
             @QueryParam("category") String categoryName, @QueryParam("type") String typeName,
             @QueryParam("startdate") String startDate, @QueryParam("enddate") String endDate,
-            @QueryParam("ownername") String ownerName, @QueryParam("parent_id") String parentTaskId,
-            @QueryParam("total") String total) {
+            @QueryParam("ownername") String ownerName, @QueryParam("total") String total) {
         CategoryBusiness cb = new CategoryBusiness();
         TypeBusiness tyb = new TypeBusiness();
         TaskBusiness tb = new TaskBusiness();
         UserBusiness ub = new UserBusiness();
         JSONObject jo = new JSONObject();
-        int result = 0;
+        int taskId = 0;
         Date sDate;
         Date eDate;
-        Category category = null;
-        Type type = null;
-        Users owner;
-        Task parentTask = null;
         Task task = null;
         float taskTotal;
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        if (name != null && startDate != null && endDate != null && total != null && ownerName != null
+                && categoryName != null && typeName != null) {
 
-        if (name != null && startDate != null && endDate != null && total != null && ownerName != null) {
-            owner = ub.viewUser(ownerName);
             try {
                 sDate = df.parse(startDate);
                 eDate = df.parse(endDate);
@@ -78,28 +73,79 @@ public class TaskServices {
                 taskTotal = 0;
             }
 
-            if (taskTotal != 0 && sDate != null && eDate != null && owner != null) {
-                if (categoryName != null && typeName != null && parentTaskId == null) {
-                    category = cb.getCategoryByName(categoryName);
-                    type = tyb.getTypebyName(typeName);
-                } else if (parentTaskId != null && categoryName == null && typeName == null) {
-                    parentTask = tb.getTaskByName(parentTaskId);
-                    category = parentTask.getCategoryId();
-                    type = parentTask.getTypeId();
+            if (taskTotal != 0 && sDate != null && eDate != null) {
+                Category category = cb.getCategoryByName(categoryName);
+                Type type = tyb.getTypebyName(typeName);
+                Users owner = ub.viewUser(ownerName);
+                if (category != null && type != null && owner != null) {
+                    task = new Task(name, description, category, type, sDate, eDate, taskTotal, owner, null);
                 }
-                task = new Task(name, description, category, type, sDate, eDate, taskTotal, owner, parentTask);
             }
-            if (task != null) {
-                result = tb.addTask(task);
-            }
+        }
+        if (task != null) {
+            taskId = tb.addTask(task);
         }
 
         try {
-            jo.put("id", result);
+            jo.put("id", taskId);
         } catch (JSONException ex) {
             Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
         }
         return jo;
+    }
+
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/createmilestone")
+    public JSONObject createMilestone(@QueryParam("name") String name, @QueryParam("description") String description,
+            @QueryParam("startdate") String startDate, @QueryParam("enddate") String endDate,
+            @QueryParam("parent_id") String parentTask, @QueryParam("total") String total) {
+        JSONObject json = new JSONObject();
+        TaskBusiness tb = new TaskBusiness();;
+        UserBusiness ub;
+        Task parent;
+        int milestoneId = 0;
+        Date sDate;
+        Date eDate;
+        Task milestone = null;
+        float milestoneTotal;
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        if (name != null && description != null && startDate != null && endDate != null
+                && parentTask != null && total != null) {
+            
+            ub = new UserBusiness();
+            parent = tb.getTaskByName(parentTask);
+            try {
+                sDate = df.parse(startDate);
+                eDate = df.parse(endDate);
+            } catch (ParseException ex) {
+                Logger.getLogger(TaskServices.class.getName()).log(Level.SEVERE, null, ex);
+                sDate = null;
+                eDate = null;
+            }
+            try {
+                milestoneTotal = Float.parseFloat(total);
+            } catch (Exception ex) {
+                milestoneTotal = 0;
+            }
+            if (milestoneTotal != 0 && sDate != null && eDate != null && parent != null) {
+                Category category = parent.getCategoryId();
+                Type type = parent.getTypeId();
+                Users owner = parent.getOwnerId();
+                milestone = new Task(name, description, category, type, sDate, eDate, milestoneTotal, owner, parent);
+            }
+        }
+        if (milestone != null) {
+            milestoneId = tb.addTask(milestone);
+        }
+
+        try {
+            json.put("id", milestoneId);
+        } catch (JSONException ex) {
+            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return json;
     }
 
     @GET
