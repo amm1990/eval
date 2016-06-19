@@ -58,7 +58,7 @@ public class Profile {
             @QueryParam("password") String password, @QueryParam("email") String email,
             @QueryParam("gender") String gender) {
         UserBusiness ub = new UserBusiness();
-        String updated;
+        String updated = "empty_values";
         JSONObject json = new JSONObject();
         Users user = new Users();
         if (id != null && name != null && password != null && email != null && gender != null) {
@@ -69,13 +69,12 @@ public class Profile {
             user.setEmail(email);
             user.setGender(gender);
             updated = ub.updateUser(user);
-            try {
-                json.put("status", updated);
-            } catch (JSONException ex) {
-                Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
-
+        try {
+            json.put("status", updated);
+        } catch (JSONException ex) {
+            Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return json;
     }
 }
