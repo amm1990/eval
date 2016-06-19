@@ -9,8 +9,8 @@ import com.iti.evalue.daos.UserDao;
 import com.iti.evalue.entities.Users;
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.Base64;
 import java.util.List;
+import org.apache.tomcat.util.codec.binary.Base64;
 
 /**
  *
@@ -107,7 +107,7 @@ public class UserBusiness {
     }
 
 //used for forgot password
-public boolean updatePassword(String name, String password) {
+    public boolean updatePassword(String name, String password) {
         boolean updated = false;
         Users user = ud.selectByUser(name);
         if (user != null) {
@@ -137,27 +137,12 @@ public boolean updatePassword(String name, String password) {
         ud.updateUser(user);
         return sent;
     }
-    // get user id for achievement service..    
-
-//    public int getUserIdByName(String userName) {
-//        int uid;
-//        Users u = ud.selectByUser(userName);
-//        uid = u.getId();
-//        return uid;
-//    }
+    
 ///dummy methods to testimage sending
     public void addImage(String image) {
-        byte[] im = image.getBytes();
-        String coded = Base64.getEncoder().encodeToString(im);
-        
+        byte[] imageBytes = Base64.decodeBase64(image);
         Users user = ud.selectByUser("aya");
-        //user.setImage(data);
+        user.setImage(imageBytes);
         ud.updateUser(user);
     }
-
-//    public String readImage() {
-//        byte[] image = ud.selectByUser("aya").getImage();
-//        String coded = Base64.getEncoder().encodeToString(image);
-//        return coded;
-//    }
 }
