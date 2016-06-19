@@ -56,13 +56,13 @@ public class Registration {
     @Path("/test")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public JSONObject imageCall(@QueryParam("image") String imageCode) {
+    public JSONObject imageCall(@QueryParam("image") String image) {
         JSONObject json = new JSONObject();
         UserBusiness ub = new UserBusiness();
-        ub.addImage();
-//        //String im = ub.readImage();
+        ub.addImage(image);
+        //String im = ub.readImage();
 //        try {
-//            json.put("image", im);
+//            //json.put("image", im);
 //        } catch (JSONException ex) {
 //            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
 //        }
