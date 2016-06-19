@@ -58,10 +58,17 @@ public class Registration {
     @Path("/test")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public void imageCall(@QueryParam("image") String image) {
+    public JSONObject imageCall(@QueryParam("image") String image) {
+        JSONObject json = new JSONObject();
         if (image != null) {
             UserBusiness ub = new UserBusiness();
             ub.addImage(image);
         }
+        try {
+            json.put("inserted", "inserted");
+        } catch (JSONException ex) {
+            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return json;
     }
 }
