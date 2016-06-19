@@ -11,8 +11,6 @@ import com.iti.evalue.daos.UsersTaskDao;
 import com.iti.evalue.entities.Task;
 import com.iti.evalue.entities.Users;
 import com.iti.evalue.entities.UsersTask;
-import com.notnoop.apns.APNS;
-import com.notnoop.apns.ApnsService;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -107,18 +105,6 @@ public class TaskBusiness {
         String result = "saved";
         return result;
     }
-
-//    // get task  by owner_id & task-name &     user-name
-//    public Task getTaskByNameAndOwnerName(String taskName, String userName) {
-//
-//        UserBusiness ub = new UserBusiness();
-//        int userId = ub.getUserIdByName(userName);
-//        Task task;
-//        TaskDao t = new TaskDao();
-//        int taskId = t.selectByOwnerIdAndTaskName(userId, taskName);
-//        task = t.selectById(taskId);
-//        return task;
-//    }
 
     //used for task deletion
     public boolean deleteTask(String owner, String name) {
