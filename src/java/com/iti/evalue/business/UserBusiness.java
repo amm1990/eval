@@ -38,7 +38,7 @@ public class UserBusiness {
         String result = "failed";
         Users u1 = null;
         Users u2;
-        if ((u.getName() != null) && (u.getGender() != null) && (u.getPassword() != null)) {
+        if ((u.getName() != null) && (u.getGender() != null) && (u.getPassword() != null) && (u.getToken() != null)) {
             u2 = ud.selectByUser(u.getName());
             if (u.getEmail() != null) {
                 u1 = ud.selectByEmail(u.getEmail());
