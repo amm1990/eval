@@ -146,18 +146,13 @@ public boolean updatePassword(String name, String password) {
 //        return uid;
 //    }
 ///dummy methods to testimage sending
-    public void addImage() {
-        String dd = "hellooooo newjersey";
-        byte[] data = dd.getBytes();
-        String ds = Base64.getEncoder().encodeToString(data);
-        byte[] result = Base64.getDecoder().decode(ds);
-        System.out.println(result + "   " + result.toString());
-
-        //String coded = Base64.getEncoder().encodeToString(image);
-        //return coded;
-        //Users user = ud.selectByUser("aya");
+    public void addImage(String image) {
+        byte[] im = image.getBytes();
+        String coded = Base64.getEncoder().encodeToString(im);
+        
+        Users user = ud.selectByUser("aya");
         //user.setImage(data);
-        //ud.updateUser(user);
+        ud.updateUser(user);
     }
 
 //    public String readImage() {
