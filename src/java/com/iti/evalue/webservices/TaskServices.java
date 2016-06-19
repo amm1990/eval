@@ -102,7 +102,7 @@ public class TaskServices {
             @QueryParam("startdate") String startDate, @QueryParam("enddate") String endDate,
             @QueryParam("parent_id") String parentTask, @QueryParam("total") String total) {
         JSONObject json = new JSONObject();
-        TaskBusiness tb = new TaskBusiness();;
+        TaskBusiness tb = new TaskBusiness();
         UserBusiness ub;
         Task parent;
         int milestoneId = 0;
