@@ -99,7 +99,8 @@ public class Task implements Serializable {
         this.endDate = endDate;
         this.total = total;
     }
-    public Task(String name, String description, Category category, Type type, Date startDate, Date endDate, 
+
+    public Task(String name, String description, Category category, Type type, Date startDate, Date endDate,
             float total, Users owner, Task parent) {
         this.name = name;
         this.description = description;
@@ -109,7 +110,9 @@ public class Task implements Serializable {
         this.endDate = endDate;
         this.total = total;
         this.ownerId = owner;
-        this.parentid = parent;
+        if (parent != null) {
+            this.parentid = parent;
+        }
     }
 
     public Integer getId() {
@@ -236,5 +239,5 @@ public class Task implements Serializable {
     public String toString() {
         return "com.iti.evalue.entities.Task[ id=" + id + " ]";
     }
-    
+
 }
