@@ -54,24 +54,28 @@ public class Profile {
     @Path("/edit")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public JSONObject editProfile(@QueryParam("id") int id, @QueryParam("name") String name,
+    public JSONObject editProfile(@QueryParam("id") String id, @QueryParam("name") String name,
             @QueryParam("password") String password, @QueryParam("email") String email,
             @QueryParam("gender") String gender) {
         UserBusiness ub = new UserBusiness();
         String updated;
         JSONObject json = new JSONObject();
         Users user = new Users();
-        user.setId(id);
-        user.setName(name);
-        user.setPassword(password);
-        user.setEmail(email);
-        user.setGender(gender);
-        updated = ub.updateUser(user);
-        try {
-            json.put("status", updated);
-        } catch (JSONException ex) {
-            Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
+        if (id != null && name != null && password != null && email != null && gender != null) {
+            int uid = Integer.parseInt(id);
+            user.setId(uid);
+            user.setName(name);
+            user.setPassword(password);
+            user.setEmail(email);
+            user.setGender(gender);
+            updated = ub.updateUser(user);
+            try {
+                json.put("status", updated);
+            } catch (JSONException ex) {
+                Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+
         return json;
     }
 }
