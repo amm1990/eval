@@ -88,7 +88,6 @@ public class UserBusiness {
         if (u != null) {
             Users u1 = ud.selectByUser(u.getName());
             Users u2 = ud.selectByEmail(u.getEmail());
-            //need to check if the similar values are not for the same user
             if (u1 != null && u2 != null && !u1.equals(u) && !u2.equals(u)) {
                 updated = "both";
             } else if (u1 != null && u2 == null && !u1.equals(u)) {
