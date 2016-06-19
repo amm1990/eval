@@ -119,12 +119,12 @@ public class TaskBusiness {
                         td.deleteTask(list.get(i));
                     }
                     List<UsersTask> assignments = task.getUsersTaskList();
-                    td.deleteTask(task);
-                    deleted = true;
                     for(int i=0; i < assignments.size(); i++) {
-                        String body = o + " has deleted " + name + " task";
+                        String body = o.getName() + " has deleted " + name + " task";
                         Notifier.send(assignments.get(i).getUserId().getToken(), body);
                     }
+                    td.deleteTask(task);
+                    deleted = true;
                 }
             }
         }
