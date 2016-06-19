@@ -205,4 +205,16 @@ public class TaskBusiness {
         }
         return submitted;
     }
+
+    public void approveAchievement(String user, String task, String approval) {
+        Users u = ud.selectByUser(user);
+        Task t = td.selectByName(task);
+        if(u != null && t != null && (approval.equals("approved") || approval.equals("disapproved"))) {
+            UsersTask ut = utd.selectAssignment(u, t);
+            ut.setApproval(approval);
+            utd.updateUsersTask(ut);
+            String body = t.getOwnerId().getName() + " " + approval + " your achievement for " + t.getName();
+            Notifier.send(u.getToken(), body);
+        }
+    }
 }
