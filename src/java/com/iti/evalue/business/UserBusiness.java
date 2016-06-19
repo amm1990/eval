@@ -77,29 +77,37 @@ public class UserBusiness {
         String updated = "fail";
         Users u = ud.selectById(user.getId());
         if (u != null) {
-            Users u1 = ud.selectByUser(u.getName());
-            Users u2 = ud.selectByEmail(u.getEmail());
-            if (u1 != null && u2 != null && !u1.equals(u) && !u2.equals(u)) {
-                updated = "both";
-            } else if (u1 != null && u2 == null && !u1.equals(u)) {
-                updated = "name";
-            } else if (u1 == null && u2 != null && !u2.equals(u)) {
-                updated = "email";
-            } else if (u1 == null && u2 == null) {
-
+            if ((u.getEmail().equals(user.getEmail()) && u.getName().equals(user.getName()))
+                    || ((u.getEmail().equals(user.getEmail()) && (!u.getName().equals(user.getName()) && ud.selectByUser(user.getName()) == null)))
+                    || ((!u.getEmail().equals(user.getEmail()) && ud.selectByEmail(user.getEmail()) == null) && u.getName().equals(user.getName()))
+                    || ((!u.getEmail().equals(user.getEmail()) && ud.selectByEmail(user.getEmail()) == null)
+                    && (!u.getName().equals(user.getName()) && ud.selectByUser(user.getName()) == null))) {
                 u.setName(user.getName());
                 u.setPassword(user.getPassword());
                 u.setEmail(user.getEmail());
                 u.setGender(user.getGender());
                 ud.updateUser(u);
                 updated = "success";
+            } else if (((!u.getEmail().equals(user.getEmail()) && ud.selectByEmail(user.getEmail()) == null)
+                    && (!u.getName().equals(user.getName()) && ud.selectByUser(user.getName()) != null))
+                    || ((u.getEmail().equals(user.getEmail()))
+                    && (!u.getName().equals(user.getName()) && ud.selectByUser(user.getName()) == null))) {
+
+                updated = "name";
+            } else if (((!u.getEmail().equals(user.getEmail()) && ud.selectByEmail(user.getEmail()) != null) && (u.getName().equals(user.getName())))
+                    || ((!u.getEmail().equals(user.getEmail()) && ud.selectByEmail(user.getEmail()) != null) && (!u.getName().equals(user.getName())
+                    && ud.selectByUser(user.getName()) == null))) {
+                updated = "email";
+            } else if ((!u.getEmail().equals(user.getEmail()) && ud.selectByEmail(user.getEmail()) != null)
+                    && (!u.getName().equals(user.getName()) && ud.selectByUser(user.getName()) != null)) {
+                updated = "both";
             }
         }
         return updated;
     }
 
-    //used for forgot password
-    public boolean updatePassword(String name, String password) {
+//used for forgot password
+public boolean updatePassword(String name, String password) {
         boolean updated = false;
         Users user = ud.selectByUser(name);
         if (user != null) {
