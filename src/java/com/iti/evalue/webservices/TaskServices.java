@@ -348,8 +348,9 @@ public class TaskServices {
                 Task task = tasks.get(i);
                 try {
                     jo.put("name", task.getName());
-                    jo.put("category", task.getCategoryId().getName());
                     jo.put("description", task.getDescription());
+                    jo.put("category", task.getCategoryId().getName());
+                    jo.put("type", task.getTypeId().getName());
                     jo.put("start_date", task.getStartDate());
                     jo.put("end_date", task.getEndDate());
                     jo.put("total", task.getTotal());
