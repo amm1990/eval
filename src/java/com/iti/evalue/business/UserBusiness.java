@@ -137,11 +137,8 @@ public class UserBusiness {
         ud.updateUser(user);
         return sent;
     }
-    
-///dummy methods to testimage sending
-  //  public void addImage(String image) {
+
     public void addImage(String image) {
-        System.out.println("add image method called");
         byte[] imageBytes = Base64.decodeBase64(image);
         Users user = ud.selectByUser("Mas");
         user.setImage(imageBytes);

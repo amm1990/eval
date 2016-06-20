@@ -34,7 +34,7 @@ public class Registration {
     @Path("/newuser")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public JSONObject createUser(@QueryParam("parent_name") String parentName, @QueryParam("name") String name,
+    public JSONObject createUser(@QueryParam("parent") String parentName, @QueryParam("name") String name,
             @QueryParam("password") String password, @QueryParam("email") String email,
             @QueryParam("gender") String gender, @QueryParam("token") String token) {
         UserBusiness ub = new UserBusiness();
@@ -57,14 +57,12 @@ public class Registration {
         return registration;
     }
 
-    //@GET
     @POST
     @Path("/saveimage")
     @Produces(MediaType.APPLICATION_JSON)
     public JSONObject imageCall(@FormParam("image") String image) {
         JSONObject json = new JSONObject();
          if (image != null) {
-             System.out.println("value of image is not null");
         UserBusiness ub = new UserBusiness();
             ub.addImage(image);
          }
