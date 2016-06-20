@@ -112,7 +112,7 @@ public class TaskServices {
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
         if (name != null && description != null && startDate != null && endDate != null
                 && parentTask != null && total != null) {
-            
+
             parent = tb.getTaskByName(parentTask);
             try {
                 sDate = df.parse(startDate);
@@ -258,8 +258,7 @@ public class TaskServices {
                 jo.put("startdate", task.getStartDate());
                 jo.put("enddate", task.getEndDate());
                 jo.put("type", task.getTypeId().getName());
-//                jo.put("evaluation", task.getEvaluation());
-//                jo.put("progress", task.getProgress());
+                jo.put("total", task.getTotal());
                 json.put(jo);
             } catch (JSONException ex) {
                 Logger.getLogger(TaskServices.class.getName()).log(Level.SEVERE, null, ex);
@@ -298,15 +297,15 @@ public class TaskServices {
         }
         return json;
     }
-    
+
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/approveachievement")
-    public JSONObject approveAchievement(@QueryParam("user") String user, @QueryParam("milestone") String task, 
+    public JSONObject approveAchievement(@QueryParam("user") String user, @QueryParam("milestone") String task,
             @QueryParam("approval") String approval) {
         JSONObject json = new JSONObject();
-        if(user != null && task != null && approval != null) {
+        if (user != null && task != null && approval != null) {
             TaskBusiness tb = new TaskBusiness();
             tb.approveAchievement(user, task, approval);
         }
@@ -317,7 +316,7 @@ public class TaskServices {
         }
         return json;
     }
-    
+
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -325,9 +324,38 @@ public class TaskServices {
     public JSONObject joinTask(@QueryParam("user") String user, @QueryParam("task") String task,
             @QueryParam("approval") String approval) {
         JSONObject json = new JSONObject();
-        if(user != null && task != null && approval != null) {
+        if (user != null && task != null && approval != null) {
             TaskBusiness tb = new TaskBusiness();
             tb.approveJoinTask(user, task, approval);
+        }
+        return json;
+    }
+
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/taskbytype")
+    public JSONArray selectTaskByType(@QueryParam("owner") String owner, @QueryParam("type") String type) {
+        JSONArray json = new JSONArray();
+        if (owner != null && type != null) {
+            TaskBusiness tb = new TaskBusiness();
+            List<Task> tasks = tb.selectTasksByType(owner, type);
+            for (int i = 0; i < tasks.size(); i++) {
+
+                JSONObject jo = new JSONObject();
+                Task task = tasks.get(i);
+                try {
+                    jo.put("name", task.getName());
+                    jo.put("category", task.getCategoryId().getName());
+                    jo.put("description", task.getDescription());
+                    jo.put("start_date", task.getStartDate());
+                    jo.put("end_date", task.getEndDate());
+                    jo.put("total", task.getTotal());
+                    json.put(jo);
+                } catch (JSONException ex) {
+                    Logger.getLogger(TaskServices.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
         return json;
     }

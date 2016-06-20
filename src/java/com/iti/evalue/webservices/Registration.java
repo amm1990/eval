@@ -156,7 +156,7 @@ public class Registration {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    //@Consumes(MediaType.APPLICATION_JSON)
+    @Path("/allusers")
     public JSONArray allSubscribers() {
         JSONArray json = new JSONArray();
         UserBusiness ub = new UserBusiness();

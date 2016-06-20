@@ -7,6 +7,8 @@ package com.iti.evalue.daos;
 
 import com.iti.evalue.SessionFactoryProvider;
 import com.iti.evalue.entities.Task;
+import com.iti.evalue.entities.Type;
+import com.iti.evalue.entities.Users;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Hibernate;
@@ -71,7 +73,6 @@ public class TaskDao {
             Hibernate.initialize(task.getUsersTaskList());
         }
         session.getTransaction().commit();
-//        session.close();
         return task;
     }
 
@@ -91,16 +92,24 @@ public class TaskDao {
         return task;
     }
 
-    //select task id by owner_id and task_name
-    public int selectByOwnerIdAndTaskName(int ownerId, String taskName) {
+//    //select task id by owner_id and task_name
+//    public int selectByOwnerIdAndTaskName(int ownerId, String taskName) {
+//
+//        session = sessionFactory.openSession();
+//        session.beginTransaction();
+//        Task task = (Task) session.createQuery("from Task where ownerId = '" + ownerId + "' and name = '" + taskName + "'").uniqueResult();
+//        int task_id = task.getId();
+//        session.getTransaction().commit();
+//        session.close();
+//        return task_id;
+//
+//    }
 
-        session = sessionFactory.openSession();
+    public List<Task> selectByType(Type t, Users owner) {
+        session = sessionFactory.getCurrentSession();
         session.beginTransaction();
-        Task task = (Task) session.createQuery("from Task where ownerId = '" + ownerId + "' and name = '" + taskName + "'").uniqueResult();
-        int task_id = task.getId();
-        session.getTransaction().commit();
-        session.close();
-        return task_id;
-
+        List<Task> tasks = session.createQuery
+        ("from Task where typeId = :type and ownerId = :own").setEntity("type", t).setEntity("own", owner).list();
+        return tasks;
     }
 }

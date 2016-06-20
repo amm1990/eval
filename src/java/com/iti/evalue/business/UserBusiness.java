@@ -6,6 +6,7 @@
 package com.iti.evalue.business;
 
 import com.iti.evalue.daos.UserDao;
+import com.iti.evalue.entities.Task;
 import com.iti.evalue.entities.Users;
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -150,4 +151,5 @@ public class UserBusiness {
     public List<Users> selectAllSubscribers() {
         return ud.selectAllUsers();
     }
+
 }

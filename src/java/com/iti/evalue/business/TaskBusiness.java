@@ -273,7 +273,13 @@ public class TaskBusiness {
         Type t = tyd.selectByName(type);
         List<Task> tasks = null;
         if(o != null && t != null) {
-            tasks = td.selectByType(t, o);
+            List<Task> task = td.selectByType(t, o);
+            for(int i=0; i < task.size(); i++) {
+                Task lTask = task.get(i);
+                if(lTask.getParentid() == null) {
+                    tasks.add(lTask);
+                }
+            }
         }
         return tasks;
     }
