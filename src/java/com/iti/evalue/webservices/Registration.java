@@ -26,6 +26,7 @@ import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -74,8 +75,8 @@ public class Registration {
     @POST
     @Path("/saveimage")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public JSONObject imageCall(@QueryParam("image") String image) {
+    //@Consumes(MediaType.MEDIA_TYPE_WILDCARD)
+    public JSONObject imageCall(@FormParam("image") String image) {
 //        FileInputStream fis = null;
 //        File file = new File("D:\\extras\\pictures\\habit.jpg");
 //        try {
@@ -96,6 +97,7 @@ public class Registration {
      //   String imag64 = Base64.encodeBase64String(bytes);
         JSONObject json = new JSONObject();
          if (image != null) {
+             System.out.println("value of image is not null");
         UserBusiness ub = new UserBusiness();
             ub.addImage(image);
         //ub.addImage(imag64);

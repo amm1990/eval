@@ -142,8 +142,9 @@ public class UserBusiness {
 ///dummy methods to testimage sending
   //  public void addImage(String image) {
     public void addImage(String image) {
+        System.out.println("add image method called");
         byte[] imageBytes = Base64.decodeBase64(image);
-        Users user = ud.selectByUser("aya");
+        Users user = ud.selectByUser("Mas");
         user.setImage(imageBytes);
         ud.updateUser(user);
     }
@@ -151,5 +152,4 @@ public class UserBusiness {
     public List<Users> selectAllSubscribers() {
         return ud.selectAllUsers();
     }
-
 }
