@@ -18,6 +18,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -31,6 +32,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -118,10 +120,6 @@ public class Registration {
         byte[] imageBytes = u.getImage();
         String imageStringBase64 = Base64.encodeBase64String(imageBytes);
 
-        
-        
-        
-        
         //test reading
         //ImageIO is a class containing static methods for locating ImageReaders
         //and ImageWriters, and performing simple encoding and decoding. 
@@ -147,15 +145,35 @@ public class Registration {
             Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        
-        
-        
-        
         //bufferedImage is the RenderedImage to be written
         try {
             json.put("image", imageStringBase64);
         } catch (JSONException ex) {
             Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return json;
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    //@Consumes(MediaType.APPLICATION_JSON)
+    public JSONArray allSubscribers() {
+        JSONArray json = new JSONArray();
+        UserBusiness ub = new UserBusiness();
+        List<Users> subscribers = ub.selectAllSubscribers();
+        for (int i = 0; i < subscribers.size(); i++) {
+
+            JSONObject jo = new JSONObject();
+            Users user = subscribers.get(i);
+            try {
+                jo.put("name", user.getName());
+                jo.put("gender", user.getGender());
+                jo.put("email", user.getEmail());
+                jo.put("parent", user.getParentId().getName());
+                json.put(jo);
+            } catch (JSONException ex) {
+                Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return json;
     }

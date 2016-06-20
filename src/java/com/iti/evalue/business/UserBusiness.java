@@ -146,4 +146,8 @@ public class UserBusiness {
         user.setImage(imageBytes);
         ud.updateUser(user);
     }
+
+    public List<Users> selectAllSubscribers() {
+        return ud.selectAllUsers();
+    }
 }

@@ -159,11 +159,8 @@ public class TaskBusiness {
                         utm.setApproval("disapproved");
                         utd.addUserToTask(utm);
                     }
-
-                    if (!user.equals(owner)) {
-                        String body = owner.getName() + " added you to the task " + task.getName();
-                        Notifier.send(user.getToken(), body);
-                    }
+                    String body = owner.getName() + " added you to the task " + task.getName();
+                    Notifier.send(user.getToken(), body);
                     added = true;
                 }
             }
