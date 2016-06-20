@@ -168,8 +168,12 @@ public class Registration {
             try {
                 jo.put("name", user.getName());
                 jo.put("gender", user.getGender());
-                jo.put("email", user.getEmail());
-                jo.put("parent", user.getParentId().getName());
+                if (user.getEmail() != null) {
+                    jo.put("email", user.getEmail());
+                }
+                if (user.getParentId() != null) {
+                    jo.put("parent", user.getParentId().getName());
+                }
                 json.put(jo);
             } catch (JSONException ex) {
                 Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);

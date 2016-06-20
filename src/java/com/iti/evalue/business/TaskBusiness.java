@@ -41,9 +41,9 @@ public class TaskBusiness {
         if (name != null) {
             Users user = ud.selectByUser(name);
             if (user != null) {
-                List membertasklist = user.getTaskList();
+                List<UsersTask> membertasklist = user.getUsersTaskList();
                 for (int i = 0; i < membertasklist.size(); i++) {
-                    Task task = (Task) membertasklist.get(i);
+                    Task task = (Task) membertasklist.get(i).getTaskId();
                     if (task.getParentid() == null) {
                         if (task.getEndDate().compareTo(new Date()) > 0) {
                             tasks.add(task);
