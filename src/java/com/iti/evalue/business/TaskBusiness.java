@@ -150,6 +150,16 @@ public class TaskBusiness {
                     ut.setAchievement(0);
                     ut.setApproval("disapproved");
                     utd.addUserToTask(ut);
+                    List<Task> milestones = task.getTaskList();
+                    for(int i=0; i < milestones.size(); i++) {
+                        UsersTask utm = new UsersTask();
+                        utm.setTaskId(milestones.get(i));
+                        utm.setUserId(user);
+                        utm.setAchievement(0);
+                        utm.setApproval("disapproved");
+                        utd.addUserToTask(utm);
+                    }
+                    
                     String body = owner.getName() + " added you to the task " + task.getName();
                     Notifier.send(user.getToken(), body);
                     added = true;
@@ -171,6 +181,16 @@ public class TaskBusiness {
                     }
                 }
                 if (ut != null) {
+                    
+                    List<Task> milestones = task.getTaskList();
+                    for(int i=0; i < milestones.size(); i++) {
+                        List<UsersTask> utm = milestones.get(i).getUsersTaskList();
+                        for(int j=0; j < utm.size(); j++) {
+                            if(utm.get(j).getUserId().equals(user)) {
+                                utd.deleteUserFromTask(utm.get(j));
+                            }
+                        }
+                    }
                     utd.deleteUserFromTask(ut);
                     String body = owner.getName() + " removed you from " + task.getName() + " task";
                     Notifier.send(user.getToken(), body);

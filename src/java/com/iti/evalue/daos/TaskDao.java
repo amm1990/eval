@@ -8,6 +8,7 @@ package com.iti.evalue.daos;
 import com.iti.evalue.SessionFactoryProvider;
 import com.iti.evalue.entities.Task;
 import java.util.ArrayList;
+import java.util.List;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -80,7 +81,11 @@ public class TaskDao {
         Task task = (Task) session.createQuery("from Task where name = '" + name + "'").uniqueResult();
         if (task != null) {
             Hibernate.initialize(task.getUsersTaskList());
-            Hibernate.initialize(task.getTaskList());
+            List<Task> milestone = task.getTaskList();
+            Hibernate.initialize(milestone);
+            for(int i=0; i < milestone.size(); i++) {
+                Hibernate.initialize(milestone.get(i).getUsersTaskList());
+            }
         }
         session.getTransaction().commit();
         return task;

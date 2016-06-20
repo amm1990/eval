@@ -103,7 +103,6 @@ public class TaskServices {
             @QueryParam("parent_id") String parentTask, @QueryParam("total") String total) {
         JSONObject json = new JSONObject();
         TaskBusiness tb = new TaskBusiness();
-        UserBusiness ub;
         Task parent;
         int milestoneId = 0;
         Date sDate;
@@ -114,7 +113,6 @@ public class TaskServices {
         if (name != null && description != null && startDate != null && endDate != null
                 && parentTask != null && total != null) {
             
-            ub = new UserBusiness();
             parent = tb.getTaskByName(parentTask);
             try {
                 sDate = df.parse(startDate);
@@ -303,7 +301,7 @@ public class TaskServices {
     
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
-   // @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/approveachievement")
     public JSONObject approveAchievement(@QueryParam("user") String user, @QueryParam("task") String task, 
             @QueryParam("achievement") String approval) {
