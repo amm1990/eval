@@ -7,8 +7,7 @@ package com.iti.evalue.webservices;
 
 import com.iti.evalue.business.UserBusiness;
 import com.iti.evalue.entities.Users;
-import java.util.Base64;
-//import org.apache.tomcat.util.codec.binary.Base64;
+import org.apache.tomcat.util.codec.binary.Base64;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -88,8 +87,7 @@ public class Registration {
         UserBusiness ub = new UserBusiness();
         Users u = ub.viewUser(user);
         byte[] imageBytes = u.getImage();
-        //String imageStringBase64 = Base64.encodeBase64String(imageBytes);
-        String imageStringBase64 = Base64.getEncoder().encodeToString(imageBytes);
+        String imageStringBase64 = Base64.encodeBase64String(imageBytes);
         try {
             json.put("image", imageStringBase64);
         } catch (JSONException ex) {
