@@ -28,11 +28,11 @@ public class Achievement {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/addAchievement")
-    public JSONObject addAchievement(@QueryParam("username") String userName, @QueryParam("taskname") String taskName,
+    public JSONObject addAchievement(@QueryParam("username") String userName, @QueryParam("milestone") String milestone,
             @QueryParam("achievement") String achievement) {
 
         String inserted = "not_inserted";
-        if (userName != null && taskName != null && achievement != null) {
+        if (userName != null && milestone != null && achievement != null) {
             boolean submitted;
             float eval;
             try {
@@ -42,7 +42,7 @@ public class Achievement {
             }
             if (eval != 0) {
                 TaskBusiness tb = new TaskBusiness();
-                submitted = tb.submitAchievement(eval, userName, taskName);
+                submitted = tb.submitAchievement(eval, userName, milestone);
                 if (submitted) {
                     inserted = "inserted";
                 }

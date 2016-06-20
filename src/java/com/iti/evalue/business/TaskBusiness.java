@@ -113,13 +113,13 @@ public class TaskBusiness {
             Task task = td.selectByName(name);
             Users o = ud.selectByUser(owner);
             if (task != null && o != null) {
-               if (task.getOwnerId().equals(o)) {
-                   List<Task> list = task.getTaskList();
+                if (task.getOwnerId().equals(o)) {
+                    List<Task> list = task.getTaskList();
                     for (int i = 0; i < list.size(); i++) {
                         td.deleteTask(list.get(i));
                     }
                     List<UsersTask> assignments = task.getUsersTaskList();
-                    for(int i=0; i < assignments.size(); i++) {
+                    for (int i = 0; i < assignments.size(); i++) {
                         String body = o.getName() + " has deleted " + name + " task";
                         Notifier.send(assignments.get(i).getUserId().getToken(), body);
                     }
@@ -151,7 +151,7 @@ public class TaskBusiness {
                     ut.setApproval("disapproved");
                     utd.addUserToTask(ut);
                     List<Task> milestones = task.getTaskList();
-                    for(int i=0; i < milestones.size(); i++) {
+                    for (int i = 0; i < milestones.size(); i++) {
                         UsersTask utm = new UsersTask();
                         utm.setTaskId(milestones.get(i));
                         utm.setUserId(user);
@@ -159,7 +159,7 @@ public class TaskBusiness {
                         utm.setApproval("disapproved");
                         utd.addUserToTask(utm);
                     }
-                    
+
                     String body = owner.getName() + " added you to the task " + task.getName();
                     Notifier.send(user.getToken(), body);
                     added = true;
@@ -181,12 +181,12 @@ public class TaskBusiness {
                     }
                 }
                 if (ut != null) {
-                    
+
                     List<Task> milestones = task.getTaskList();
-                    for(int i=0; i < milestones.size(); i++) {
+                    for (int i = 0; i < milestones.size(); i++) {
                         List<UsersTask> utm = milestones.get(i).getUsersTaskList();
-                        for(int j=0; j < utm.size(); j++) {
-                            if(utm.get(j).getUserId().equals(user)) {
+                        for (int j = 0; j < utm.size(); j++) {
+                            if (utm.get(j).getUserId().equals(user)) {
                                 utd.deleteUserFromTask(utm.get(j));
                             }
                         }
@@ -210,30 +210,38 @@ public class TaskBusiness {
         return milestones;
     }
 
-    public boolean submitAchievement(float eval, String userName, String taskName) {
+    public boolean submitAchievement(float eval, String userName, String milestone) {
         boolean submitted = false;
-        Task task = td.selectByName(taskName);
+        Task ms = td.selectByName(milestone);
         Users user = ud.selectByUser(userName);
-        if (task != null && user != null) {
-            UsersTask ut = utd.selectAssignment(user, task);
-            ut.setAchievement(eval);
-            utd.updateUsersTask(ut);
-            String Notificationbody = "user " + user.getName() + " submitted their achievement for "
-                    + task.getName() + " task and is requesting your approval";
-            Notifier.send(task.getOwnerId().getToken(), Notificationbody);
-            submitted = true;
+        if (ms != null && user != null) {
+            if (ms.getParentid() != null) {
+                UsersTask ut = utd.selectAssignment(user, ms);
+                ut.setAchievement(eval);
+                ut.setApproval("disapproved");
+                utd.updateUsersTask(ut);
+                String Notificationbody = "user " + user.getName() + " submitted their achievement for milestone "
+                        + ms.getName() + "  of task " +  ms.getParentid().getName() + " and is requesting your approval";
+                Notifier.send(ms.getOwnerId().getToken(), Notificationbody);
+                submitted = true;
+            }
         }
         return submitted;
     }
 
-    public void approveAchievement(String user, String task, String approval) {
+    public void approveAchievement(String user, String milestone, String approval) {
         Users u = ud.selectByUser(user);
-        Task t = td.selectByName(task);
-        if(u != null && t != null && (approval.equals("approved") || approval.equals("disapproved"))) {
-            UsersTask ut = utd.selectAssignment(u, t);
+        Task ms = td.selectByName(milestone);
+        if (u != null && ms != null && (approval.equals("approved") || approval.equals("disapproved"))) {
+            UsersTask ut = utd.selectAssignment(u, ms);
             ut.setApproval(approval);
             utd.updateUsersTask(ut);
-            String body = t.getOwnerId().getName() + " " + approval + " your achievement for " + t.getName();
+            if(approval.equals("approved")) {
+                Task parent = ms.getParentid();
+                parent.setTotal(parent.getTotal() + ut.getAchievement());
+            }
+            String body = ms.getOwnerId().getName() + " " + approval + " of your achievement for " + ms.getName() + 
+                    " in " + ms.getParentid() + " task";
             Notifier.send(u.getToken(), body);
         }
     }
