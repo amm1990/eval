@@ -61,7 +61,6 @@ public class Registration {
     @POST
     @Path("/saveimage")
     @Produces(MediaType.APPLICATION_JSON)
-    //@Consumes(MediaType.MEDIA_TYPE_WILDCARD)
     public JSONObject imageCall(@FormParam("image") String image) {
         JSONObject json = new JSONObject();
          if (image != null) {
@@ -78,8 +77,7 @@ public class Registration {
     }
 
     @GET
-    //@POST
-    @Path("/testread")
+    @Path("/readimage")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public JSONObject sendImage(@QueryParam("user") String user) {
