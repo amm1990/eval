@@ -303,8 +303,8 @@ public class TaskServices {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/approveachievement")
-    public JSONObject approveAchievement(@QueryParam("user") String user, @QueryParam("task") String task, 
-            @QueryParam("achievement") String approval) {
+    public JSONObject approveAchievement(@QueryParam("user") String user, @QueryParam("milestone") String task, 
+            @QueryParam("approval") String approval) {
         JSONObject json = new JSONObject();
         if(user != null && task != null && approval != null) {
             TaskBusiness tb = new TaskBusiness();
@@ -314,6 +314,20 @@ public class TaskServices {
             json.put("approval", approval);
         } catch (JSONException ex) {
             Logger.getLogger(TaskServices.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return json;
+    }
+    
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/approvejoiningtask")
+    public JSONObject joinTask(@QueryParam("user") String user, @QueryParam("task") String task,
+            @QueryParam("approval") String approval) {
+        JSONObject json = new JSONObject();
+        if(user != null && task != null && approval != null) {
+            TaskBusiness tb = new TaskBusiness();
+            tb.approveJoinTask(user, task, approval);
         }
         return json;
     }

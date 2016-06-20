@@ -160,8 +160,10 @@ public class TaskBusiness {
                         utd.addUserToTask(utm);
                     }
 
-                    String body = owner.getName() + " added you to the task " + task.getName();
-                    Notifier.send(user.getToken(), body);
+                    if (!user.equals(owner)) {
+                        String body = owner.getName() + " added you to the task " + task.getName();
+                        Notifier.send(user.getToken(), body);
+                    }
                     added = true;
                 }
             }
@@ -192,8 +194,10 @@ public class TaskBusiness {
                         }
                     }
                     utd.deleteUserFromTask(ut);
-                    String body = owner.getName() + " removed you from " + task.getName() + " task";
-                    Notifier.send(user.getToken(), body);
+                    if (!user.equals(owner)) {
+                        String body = owner.getName() + " removed you from " + task.getName() + " task";
+                        Notifier.send(user.getToken(), body);
+                    }
                     removed = true;
                 }
             }
@@ -216,14 +220,16 @@ public class TaskBusiness {
         Users user = ud.selectByUser(userName);
         if (ms != null && user != null) {
             if (ms.getParentid() != null) {
-                UsersTask ut = utd.selectAssignment(user, ms);
-                ut.setAchievement(eval);
-                ut.setApproval("disapproved");
-                utd.updateUsersTask(ut);
-                String Notificationbody = "user " + user.getName() + " submitted their achievement for milestone "
-                        + ms.getName() + "  of task " +  ms.getParentid().getName() + " and is requesting your approval";
-                Notifier.send(ms.getOwnerId().getToken(), Notificationbody);
-                submitted = true;
+                if (eval <= ms.getTotal()) {
+                    UsersTask ut = utd.selectAssignment(user, ms);
+                    ut.setAchievement(eval);
+                    ut.setApproval("disapproved");
+                    utd.updateUsersTask(ut);
+                    String Notificationbody = "user " + user.getName() + " submitted their achievement for milestone "
+                            + ms.getName() + "  of task " + ms.getParentid().getName() + " and is requesting your approval";
+                    Notifier.send(ms.getOwnerId().getToken(), Notificationbody);
+                    submitted = true;
+                }
             }
         }
         return submitted;
@@ -236,13 +242,28 @@ public class TaskBusiness {
             UsersTask ut = utd.selectAssignment(u, ms);
             ut.setApproval(approval);
             utd.updateUsersTask(ut);
-            if(approval.equals("approved")) {
-                Task parent = ms.getParentid();
-                parent.setTotal(parent.getTotal() + ut.getAchievement());
+            if (approval.equals("approved")) {
+                UsersTask taskAssignment = utd.selectAssignment(u, ms.getParentid());
+                taskAssignment.setAchievement(taskAssignment.getAchievement() + ut.getAchievement());
+                utd.updateUsersTask(taskAssignment);
             }
-            String body = ms.getOwnerId().getName() + " " + approval + " of your achievement for " + ms.getName() + 
-                    " in " + ms.getParentid() + " task";
+            String body = ms.getOwnerId().getName() + " " + approval + " of your achievement for " + ms.getName()
+                    + " in " + ms.getParentid() + " task";
             Notifier.send(u.getToken(), body);
+        }
+    }
+
+    public void approveJoinTask(String user, String task, String approval) {
+        Users u = ud.selectByUser(user);
+        Task t = td.selectByName(task);
+        if (u != null && t != null && (approval.equals("approved") || approval.equals("disapproved"))) {
+            Users owner = t.getOwnerId();
+            if (approval.equals("disapproved")) {
+                UsersTask ut = utd.selectAssignment(u, t);
+                removeUserFromTask(owner, t, u);
+            }
+            String body = u.getName() + " " + approval + " of joining " + t.getName() + " task";
+            Notifier.send(owner.getToken(), body);
         }
     }
 }
