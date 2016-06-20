@@ -57,7 +57,6 @@ public class TaskBusiness {
 
     public List getOwnerTasks(String name) {
         ArrayList tasks = new ArrayList();
-        if (name != null) {
             Users user = ud.selectByUser(name);
             if (user != null) {
                 List<Task> ownertasklist = user.getTaskList();
@@ -70,7 +69,6 @@ public class TaskBusiness {
                     }
                 }
             }
-        }
         return tasks;
     }
 
