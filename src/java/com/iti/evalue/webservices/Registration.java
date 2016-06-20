@@ -70,36 +70,36 @@ public class Registration {
         return registration;
     }
 
-    @GET
-    //@POST
-    @Path("/testsave")
+    //@GET
+    @POST
+    @Path("/saveimage")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public JSONObject imageCall(@QueryParam("image") String image) {
-        FileInputStream fis = null;
-        File file = new File("D:\\extras\\pictures\\habit.jpg");
-        try {
-            fis = new FileInputStream(file);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        byte[] buf = new byte[1024];
-        try {
-            for (int readNum; (readNum = fis.read(buf)) != -1;) {
-                bos.write(buf, 0, readNum);
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        byte[] bytes = bos.toByteArray();
-        String imag64 = Base64.encodeBase64String(bytes);
+//        FileInputStream fis = null;
+//        File file = new File("D:\\extras\\pictures\\habit.jpg");
+//        try {
+//            fis = new FileInputStream(file);
+//        } catch (FileNotFoundException ex) {
+//            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//        byte[] buf = new byte[1024];
+//        try {
+//            for (int readNum; (readNum = fis.read(buf)) != -1;) {
+//                bos.write(buf, 0, readNum);
+//            }
+//        } catch (IOException ex) {
+//            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        byte[] bytes = bos.toByteArray();
+     //   String imag64 = Base64.encodeBase64String(bytes);
         JSONObject json = new JSONObject();
-        // if (image != null) {
+         if (image != null) {
         UserBusiness ub = new UserBusiness();
-        //    ub.addImage(image);
-        ub.addImage(imag64);
-        // }
+            ub.addImage(image);
+        //ub.addImage(imag64);
+         }
         try {
             json.put("inserted", "inserted");
         } catch (JSONException ex) {
@@ -120,32 +120,32 @@ public class Registration {
         byte[] imageBytes = u.getImage();
         String imageStringBase64 = Base64.encodeBase64String(imageBytes);
 
-        //test reading
-        //ImageIO is a class containing static methods for locating ImageReaders
-        //and ImageWriters, and performing simple encoding and decoding. 
-        try {
-            byte[] reverse = Base64.decodeBase64(imageStringBase64);
-
-            ByteArrayInputStream bis = new ByteArrayInputStream(reverse);
-            Iterator<?> readers = ImageIO.getImageReadersByFormatName("jpg");
-            ImageReader reader = (ImageReader) readers.next();
-            Object source = bis;
-            ImageInputStream iis = ImageIO.createImageInputStream(source);
-            reader.setInput(iis, true);
-            ImageReadParam param = reader.getDefaultReadParam();
-            Image image = reader.read(0, param);
-            BufferedImage bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_RGB);
-            Graphics2D g2 = bufferedImage.createGraphics();
-            g2.drawImage(image, null, null);
-
-            File imageFile = new File("D:\\newrose2.jpg");
-            ImageIO.write(bufferedImage, "jpg", imageFile);
-            //got an image file
-        } catch (IOException ex) {
-            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        //bufferedImage is the RenderedImage to be written
+//        //test reading
+//        //ImageIO is a class containing static methods for locating ImageReaders
+//        //and ImageWriters, and performing simple encoding and decoding. 
+//        try {
+//            byte[] reverse = Base64.decodeBase64(imageStringBase64);
+//
+//            ByteArrayInputStream bis = new ByteArrayInputStream(reverse);
+//            Iterator<?> readers = ImageIO.getImageReadersByFormatName("jpg");
+//            ImageReader reader = (ImageReader) readers.next();
+//            Object source = bis;
+//            ImageInputStream iis = ImageIO.createImageInputStream(source);
+//            reader.setInput(iis, true);
+//            ImageReadParam param = reader.getDefaultReadParam();
+//            Image image = reader.read(0, param);
+//            BufferedImage bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_RGB);
+//            Graphics2D g2 = bufferedImage.createGraphics();
+//            g2.drawImage(image, null, null);
+//
+//            File imageFile = new File("D:\\newrose2.jpg");
+//            ImageIO.write(bufferedImage, "jpg", imageFile);
+//            //got an image file
+//        } catch (IOException ex) {
+//            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//
+//        //bufferedImage is the RenderedImage to be written
         try {
             json.put("image", imageStringBase64);
         } catch (JSONException ex) {
