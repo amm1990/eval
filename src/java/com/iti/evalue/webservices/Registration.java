@@ -103,6 +103,10 @@ public class Registration {
 
             JSONObject jo = new JSONObject();
             Users user = subscribers.get(i);
+            String imageStringBase64 = "";
+            if(user.getImage() != null) {
+                imageStringBase64 = Base64.encodeBase64String(user.getImage());
+            }
             try {
                 jo.put("name", user.getName());
                 jo.put("gender", user.getGender());
@@ -112,6 +116,7 @@ public class Registration {
                 if (user.getParentId() != null) {
                     jo.put("parent", user.getParentId().getName());
                 }
+                jo.put("image", imageStringBase64);
                 json.put(jo);
             } catch (JSONException ex) {
                 Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
