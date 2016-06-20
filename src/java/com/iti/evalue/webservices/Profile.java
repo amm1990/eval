@@ -15,6 +15,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -37,17 +38,18 @@ public class Profile {
             user = ub.viewUser(name);
         }
         if (user != null) {
+            byte[] img = user.getImage();
+            String imageStringBase64 = Base64.encodeBase64String(img);
             try {
                 json.put("name", user.getName());
                 json.put("password", user.getPassword());
                 json.put("email", user.getEmail());
                 json.put("gender", user.getGender());
-                json.put("image", user.getImage());
+                json.put("image", imageStringBase64);
             } catch (JSONException ex) {
                 Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
         return json;
     }
 
