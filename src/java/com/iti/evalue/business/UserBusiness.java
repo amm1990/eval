@@ -138,11 +138,13 @@ public class UserBusiness {
         return sent;
     }
 
-    public void addImage(String image) {
+    public void setImage(String image, String user) {
         byte[] imageBytes = Base64.decodeBase64(image);
-        Users user = ud.selectByUser("Mas");
-        user.setImage(imageBytes);
-        ud.updateUser(user);
+        Users u = ud.selectByUser(user);
+        if (u != null) {
+            u.setImage(imageBytes);
+            ud.updateUser(u);
+        }
     }
 
     public List<Users> selectAllSubscribers() {

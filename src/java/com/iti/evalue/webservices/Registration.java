@@ -60,11 +60,11 @@ public class Registration {
     @POST
     @Path("/saveimage")
     @Produces(MediaType.APPLICATION_JSON)
-    public JSONObject imageCall(@FormParam("image") String image) {
+    public JSONObject imageCall(@FormParam("image") String image, @FormParam("user") String user) {
         JSONObject json = new JSONObject();
-         if (image != null) {
+         if (image != null && user != null) {
         UserBusiness ub = new UserBusiness();
-            ub.addImage(image);
+            ub.setImage(image, user);
          }
         try {
             json.put("inserted", "inserted");
@@ -74,23 +74,23 @@ public class Registration {
         return json;
     }
 
-    @GET
-    @Path("/readimage")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public JSONObject sendImage(@QueryParam("user") String user) {
-        JSONObject json = new JSONObject();
-        UserBusiness ub = new UserBusiness();
-        Users u = ub.viewUser(user);
-        byte[] imageBytes = u.getImage();
-        String imageStringBase64 = Base64.encodeBase64String(imageBytes);
-        try {
-            json.put("image", imageStringBase64);
-        } catch (JSONException ex) {
-            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return json;
-    }
+//    @GET
+//    @Path("/readimage")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public JSONObject sendImage(@QueryParam("user") String user) {
+//        JSONObject json = new JSONObject();
+//        UserBusiness ub = new UserBusiness();
+//        Users u = ub.viewUser(user);
+//        byte[] imageBytes = u.getImage();
+//        String imageStringBase64 = Base64.encodeBase64String(imageBytes);
+//        try {
+//            json.put("image", imageStringBase64);
+//        } catch (JSONException ex) {
+//            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return json;
+//    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

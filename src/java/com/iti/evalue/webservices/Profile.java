@@ -42,6 +42,7 @@ public class Profile {
                 json.put("password", user.getPassword());
                 json.put("email", user.getEmail());
                 json.put("gender", user.getGender());
+                json.put("image", user.getImage());
             } catch (JSONException ex) {
                 Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
             }
