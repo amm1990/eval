@@ -56,12 +56,11 @@ public class TaskBusiness {
     }
 
     public List getOwnerTasks(String name) {
-
         ArrayList tasks = new ArrayList();
         if (name != null) {
             Users user = ud.selectByUser(name);
             if (user != null) {
-                List ownertasklist = user.getTaskList();
+                List<Task> ownertasklist = user.getTaskList();
                 for (int i = 0; i < ownertasklist.size(); i++) {
                     Task task = (Task) ownertasklist.get(i);
                     if (task.getParentid() == null) {
@@ -272,11 +271,11 @@ public class TaskBusiness {
         Users o = ud.selectByUser(owner);
         Type t = tyd.selectByName(type);
         List<Task> tasks = null;
-        if(o != null && t != null) {
+        if (o != null && t != null) {
             List<Task> task = td.selectByType(t, o);
-            for(int i=0; i < task.size(); i++) {
+            for (int i = 0; i < task.size(); i++) {
                 Task lTask = task.get(i);
-                if(lTask.getParentid() == null) {
+                if (lTask.getParentid() == null) {
                     tasks.add(lTask);
                 }
             }
