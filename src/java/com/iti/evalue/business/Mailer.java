@@ -5,9 +5,6 @@
  */
 package com.iti.evalue.business;
 
-import com.iti.evalue.entities.Users;
-import java.math.BigInteger;
-import java.security.SecureRandom;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;

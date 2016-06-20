@@ -7,8 +7,6 @@ package com.iti.evalue.daos;
 
 import com.iti.evalue.SessionFactoryProvider;
 import com.iti.evalue.entities.Task;
-import com.iti.evalue.entities.Type;
-import com.iti.evalue.entities.Users;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Hibernate;
