@@ -57,18 +57,18 @@ public class TaskBusiness {
 
     public List getOwnerTasks(String name) {
         ArrayList tasks = new ArrayList();
-            Users user = ud.selectByUser(name);
-            if (user != null) {
-                List<Task> ownertasklist = user.getTaskList();
-                for (int i = 0; i < ownertasklist.size(); i++) {
-                    Task task = (Task) ownertasklist.get(i);
-                    if (task.getParentid() == null) {
-                        if (task.getEndDate().compareTo(new Date()) > 0) {
-                            tasks.add(task);
-                        }
+        Users user = ud.selectByUser(name);
+        if (user != null) {
+            List<Task> ownertasklist = user.getTaskList();
+            for (int i = 0; i < ownertasklist.size(); i++) {
+                Task task = (Task) ownertasklist.get(i);
+                if (task.getParentid() == null) {
+                    if (task.getEndDate().compareTo(new Date()) > 0) {
+                        tasks.add(task);
                     }
                 }
             }
+        }
         return tasks;
     }
 
@@ -220,13 +220,15 @@ public class TaskBusiness {
             if (ms.getParentid() != null) {
                 if (eval <= ms.getTotal()) {
                     UsersTask ut = utd.selectAssignment(user, ms);
-                    ut.setAchievement(eval);
-                    ut.setApproval("disapproved");
-                    utd.updateUsersTask(ut);
-                    String Notificationbody = "user " + user.getName() + " submitted their achievement for milestone "
-                            + ms.getName() + "  of task " + ms.getParentid().getName() + " and is requesting your approval";
-                    Notifier.send(ms.getOwnerId().getToken(), Notificationbody);
-                    submitted = true;
+                    if (ut != null) {
+                        ut.setAchievement(eval);
+                        ut.setApproval("disapproved");
+                        utd.updateUsersTask(ut);
+                        String Notificationbody = "user " + user.getName() + " submitted their achievement for milestone "
+                                + ms.getName() + "  of task " + ms.getParentid().getName() + " and is requesting your approval";
+                        Notifier.send(ms.getOwnerId().getToken(), Notificationbody);
+                        submitted = true;
+                    }
                 }
             }
         }
@@ -276,9 +278,9 @@ public class TaskBusiness {
             for (UsersTask usersTaskList : o.getUsersTaskList()) {
                 tasks.add(usersTaskList.getTaskId());
             }
-            for (int i=0; i < tasks.size(); i++) {
+            for (int i = 0; i < tasks.size(); i++) {
                 Task task = tasks.get(i);
-                if(!task.getTypeId().equals(t) || task.getParentid() != null) {
+                if (!task.getTypeId().equals(t) || task.getParentid() != null) {
                     tasks.remove(tasks.get(i));
                 }
             }

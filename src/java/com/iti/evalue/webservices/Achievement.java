@@ -28,8 +28,8 @@ public class Achievement {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/addAchievement")
-    public JSONObject addAchievement(@QueryParam("username") String userName, @QueryParam("milestone") String milestone,
-            @QueryParam("achievement") String achievement) {
+    public JSONObject addAchievement(@QueryParam("username") String userName, 
+            @QueryParam("milestone") String milestone, @QueryParam("achievement") String achievement) {
 
         String inserted = "not_inserted";
         if (userName != null && milestone != null && achievement != null) {
@@ -57,3 +57,5 @@ public class Achievement {
         return jo;
     }
 }
+
+
