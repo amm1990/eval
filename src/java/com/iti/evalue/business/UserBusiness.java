@@ -139,6 +139,7 @@ public class UserBusiness {
     }
     
 ///dummy methods to testimage sending
+  //  public void addImage(String image) {
     public void addImage(String image) {
         byte[] imageBytes = Base64.decodeBase64(image);
         Users user = ud.selectByUser("aya");
