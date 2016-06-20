@@ -6,9 +6,11 @@
 package com.iti.evalue.business;
 
 import com.iti.evalue.daos.TaskDao;
+import com.iti.evalue.daos.TypeDao;
 import com.iti.evalue.daos.UserDao;
 import com.iti.evalue.daos.UsersTaskDao;
 import com.iti.evalue.entities.Task;
+import com.iti.evalue.entities.Type;
 import com.iti.evalue.entities.Users;
 import com.iti.evalue.entities.UsersTask;
 import java.util.ArrayList;
@@ -23,11 +25,13 @@ public class TaskBusiness {
 
     TaskDao td;
     UserDao ud;
+    TypeDao tyd;
     UsersTaskDao utd;
 
     public TaskBusiness() {
         td = new TaskDao();
         ud = new UserDao();
+        tyd = new TypeDao();
         utd = new UsersTaskDao();
     }
 
@@ -262,5 +266,15 @@ public class TaskBusiness {
             String body = u.getName() + " " + approval + " of joining " + t.getName() + " task";
             Notifier.send(owner.getToken(), body);
         }
+    }
+
+    public List<Task> selectTasksByType(String owner, String type) {
+        Users o = ud.selectByUser(owner);
+        Type t = tyd.selectByName(type);
+        List<Task> tasks = null;
+        if(o != null && t != null) {
+            tasks = td.selectByType(t, o);
+        }
+        return tasks;
     }
 }
