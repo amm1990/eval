@@ -8,9 +8,22 @@ package com.iti.evalue.business;
 import com.iti.evalue.daos.UserDao;
 import com.iti.evalue.entities.Task;
 import com.iti.evalue.entities.Users;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReadParam;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import org.apache.tomcat.util.codec.binary.Base64;
 
 /**

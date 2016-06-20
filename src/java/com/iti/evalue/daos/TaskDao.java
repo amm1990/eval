@@ -105,11 +105,11 @@ public class TaskDao {
 //
 //    }
 
-    public List<Task> selectByType(Type t, Users owner) {
-        session = sessionFactory.getCurrentSession();
-        session.beginTransaction();
-        List<Task> tasks = session.createQuery
-        ("from Task where typeId = :type and ownerId = :own").setEntity("type", t).setEntity("own", owner).list();
-        return tasks;
-    }
+//    public List<Task> selectByType(Type t, Users owner) {
+//        session = sessionFactory.getCurrentSession();
+//        session.beginTransaction();
+//        List<Task> tasks = session.createQuery
+//        ("from Task where typeId = :type and ownerId = :own").setEntity("type", t).setEntity("own", owner).list();
+//        return tasks;
+//    }
 }

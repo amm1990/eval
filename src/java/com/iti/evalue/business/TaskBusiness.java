@@ -272,13 +272,22 @@ public class TaskBusiness {
         Type t = tyd.selectByName(type);
         List<Task> tasks = null;
         if (o != null && t != null) {
-            List<Task> task = td.selectByType(t, o);
-            for (int i = 0; i < task.size(); i++) {
-                Task lTask = task.get(i);
-                if (lTask.getParentid() == null) {
-                    tasks.add(lTask);
-                }
+            //List<Task> task = td.selectByType(t, o);
+            List<Task> ownerTask = o.getTaskList();
+            List<UsersTask> assignments = o.getUsersTaskList();
+            List<Task> userTasks = new ArrayList();
+            for(int i=0; i < assignments.size(); i++) {
+                userTasks.add(assignments.get(i).getTaskId());
             }
+            for (Task ownerTask1 : ownerTask) {
+               // if(ownerTask1.getTypeId())
+            }
+//            for (int i = 0; i < ownerTask.size(); i++) {
+//                Task lTask = ownerTask.get(i);
+//                if (lTask.getParentid() == null) {
+//                    tasks.add(lTask);
+//                }
+//            }
         }
         return tasks;
     }

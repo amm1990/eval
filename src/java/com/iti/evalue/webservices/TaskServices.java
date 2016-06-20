@@ -166,7 +166,8 @@ public class TaskServices {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/adduser")
-    public JSONObject addUsers(@QueryParam("owner") String owner, @QueryParam("user") String user, @QueryParam("task") String task) {
+    public JSONObject addUsers(@QueryParam("owner") String owner, @QueryParam("user") String user,
+            @QueryParam("task") String task) {
         UserBusiness ub = new UserBusiness();
         TaskBusiness tb = new TaskBusiness();
         JSONObject json = new JSONObject();
