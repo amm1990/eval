@@ -222,12 +222,10 @@ public class TaskServices {
     public JSONArray getUserTasks(@QueryParam("name") String name) {
         JSONArray json = new JSONArray();
         TaskBusiness tb = new TaskBusiness();
-        List<Task> tasks = tb.getUserTasks(name);
-        for (int i = 0; i < tasks.size(); i++) {
-            
+        List<UsersTask> uts = tb.getUserTasks(name);
+        for (int i = 0; i < uts.size(); i++) {
             JSONObject jo = new JSONObject();
-            Task task = (Task) tasks.get(i);
-
+            Task task = uts.get(i).getTaskId();
             try {
                 jo.put("name", task.getName());
                 jo.put("description", task.getDescription());
@@ -236,7 +234,8 @@ public class TaskServices {
                 jo.put("enddate", task.getEndDate());
                 jo.put("type", task.getTypeId().getName());
                 jo.put("total", task.getTotal());
-                //jo.put("approval", );
+                jo.put("approval", uts.get(i).getApproval());
+                jo.put("achievement", uts.get(i).getAchievement());
                 json.put(jo);
             } catch (JSONException ex) {
                 Logger.getLogger(TaskServices.class.getName()).log(Level.SEVERE, null, ex);
@@ -352,21 +351,55 @@ public class TaskServices {
         if (owner != null && type != null) {
             TaskBusiness tb = new TaskBusiness();
             List<Task> tasks = tb.selectTasksByType(owner, type);
-            for (int i = 0; i < tasks.size(); i++) {
+            if (tasks != null) {
+                for (int i = 0; i < tasks.size(); i++) {
+                    JSONObject jo = new JSONObject();
+                    Task task = tasks.get(i);
+                    try {
+                        jo.put("name", task.getName());
+                        jo.put("description", task.getDescription());
+                        jo.put("category", task.getCategoryId().getName());
+                        jo.put("type", task.getTypeId().getName());
+                        jo.put("start_date", task.getStartDate());
+                        jo.put("end_date", task.getEndDate());
+                        jo.put("total", task.getTotal());
+                        json.put(jo);
+                    } catch (JSONException ex) {
+                        Logger.getLogger(TaskServices.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        return json;
+    }
 
-                JSONObject jo = new JSONObject();
-                Task task = tasks.get(i);
-                try {
-                    jo.put("name", task.getName());
-                    jo.put("description", task.getDescription());
-                    jo.put("category", task.getCategoryId().getName());
-                    jo.put("type", task.getTypeId().getName());
-                    jo.put("start_date", task.getStartDate());
-                    jo.put("end_date", task.getEndDate());
-                    jo.put("total", task.getTotal());
-                    json.put(jo);
-                } catch (JSONException ex) {
-                    Logger.getLogger(TaskServices.class.getName()).log(Level.SEVERE, null, ex);
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/allusertasks")
+    public JSONArray getAllUserTasks(@QueryParam("user") String user) {
+        JSONArray json = new JSONArray();
+        if (user != null) {
+            TaskBusiness tb = new TaskBusiness();
+            List<Task> tasks = tb.selectTasksAllForUser(user);
+            if (tasks != null) {
+                for (int i = 0; i < tasks.size(); i++) {
+                    JSONObject jo = new JSONObject();
+                    Task task = tasks.get(i);
+                    String role = tb.checkRole(task, user);
+                    try {
+                        jo.put("name", task.getName());
+                        jo.put("description", task.getDescription());
+                        jo.put("category", task.getCategoryId().getName());
+                        jo.put("type", task.getTypeId().getName());
+                        jo.put("start_date", task.getStartDate());
+                        jo.put("end_date", task.getEndDate());
+                        jo.put("total", task.getTotal());
+                        jo.put("role", role);
+                        json.put(jo);
+                    } catch (JSONException ex) {
+                        Logger.getLogger(TaskServices.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         }

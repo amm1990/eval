@@ -35,32 +35,32 @@ public class TaskBusiness {
         utd = new UsersTaskDao();
     }
 
-    public List getUserTasks(String name) {
+    public List<UsersTask> getUserTasks(String name) {
 
-        ArrayList tasks = new ArrayList();
-        //ArrayList approvals = new ArrayList();
+        ArrayList userTasks = null;
         if (name != null) {
             Users user = ud.selectByUser(name);
             if (user != null) {
+                userTasks = new ArrayList();
                 List<UsersTask> membertasklist = user.getUsersTaskList();
                 for (int i = 0; i < membertasklist.size(); i++) {
-                    Task task = (Task) membertasklist.get(i).getTaskId();
-                    if (task.getParentid() == null) {
-                        if (task.getEndDate().compareTo(new Date()) > 0) {
-                            tasks.add(task);
-                            
+                    UsersTask mtl = membertasklist.get(i);
+                    if (mtl.getTaskId().getParentid() == null) {
+                        if (mtl.getTaskId().getEndDate().compareTo(new Date()) > 0) {
+                            userTasks.add(mtl);
                         }
                     }
                 }
             }
         }
-        return tasks;
+        return userTasks;
     }
 
-    public List getOwnerTasks(String name) {
-        ArrayList tasks = new ArrayList();
+    public List<Task> getOwnerTasks(String name) {
+        ArrayList tasks = null;
         Users user = ud.selectByUser(name);
         if (user != null) {
+            tasks = new ArrayList();
             List<Task> ownertasklist = user.getTaskList();
             for (int i = 0; i < ownertasklist.size(); i++) {
                 Task task = (Task) ownertasklist.get(i);
@@ -263,8 +263,7 @@ public class TaskBusiness {
             if (approval.equals("disapproved")) {
                 UsersTask ut = utd.selectAssignment(u, t);
                 removeUserFromTask(owner, t, u);
-            }
-            else if(approval.equals("approved")) {
+            } else if (approval.equals("approved")) {
                 //check if user exists in list if he doesn't add them
             }
             String body = u.getName() + " " + approval + " of joining " + t.getName() + " task";
@@ -275,21 +274,48 @@ public class TaskBusiness {
     public List<Task> selectTasksByType(String owner, String type) {
         Users o = ud.selectByUser(owner);
         Type t = tyd.selectByName(type);
-        List<Task> tasks = new ArrayList();
+        List<Task> tasks = null;
         if (o != null && t != null) {
-            for (Task taskList : o.getTaskList()) {
-                tasks.add(taskList);
+            tasks = new ArrayList();
+            for (Task task : o.getTaskList()) {
+                if (task.getTypeId().equals(t) && task.getParentid() == null) {
+                    tasks.add(task);
+                }
             }
-            for (UsersTask usersTaskList : o.getUsersTaskList()) {
-                tasks.add(usersTaskList.getTaskId());
-            }
-            for (int i = 0; i < tasks.size(); i++) {
-                Task task = tasks.get(i);
-                if (!task.getTypeId().equals(t) || task.getParentid() != null) {
-                    tasks.remove(tasks.get(i));
+            for (UsersTask usersTask : o.getUsersTaskList()) {
+                if (usersTask.getTaskId().getTypeId().equals(t) && usersTask.getTaskId().getParentid() == null) {
+                    tasks.add(usersTask.getTaskId());
                 }
             }
         }
         return tasks;
+    }
+
+    public List<Task> selectTasksAllForUser(String user) {
+        Users u = ud.selectByUser(user);
+        List<Task> tasks = null;
+        if (u != null) {
+            tasks = new ArrayList();
+            for (Task task : u.getTaskList()) {
+                if (task.getParentid() == null) {
+                    tasks.add(task);
+                }
+            }
+            for (UsersTask usersTask : u.getUsersTaskList()) {
+                if (usersTask.getTaskId().getParentid() == null) {
+                    tasks.add(usersTask.getTaskId());
+                }
+            }
+        }
+        return tasks;
+    }
+
+    public String checkRole(Task task, String user) {
+        String role = "user";
+        Users u = ud.selectByUser(user);
+        if(task.getOwnerId().equals(u)) {
+            role = "owner";
+        }
+        return role;
     }
 }

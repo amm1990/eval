@@ -48,6 +48,7 @@ public class Mailer {
         } catch (MessagingException ex) {
             Logger.getLogger(UserBusiness.class.getName()).log(Level.SEVERE, null, ex);
         }
+        System.out.println("sent is returned as " + sent);
         return sent;
     }
 }

@@ -86,14 +86,14 @@ public class Login {
         JSONObject json = new JSONObject();
         UserBusiness ub = new UserBusiness();
         String update = "not_updated";
-        boolean updated = false;
         Users user = ub.viewUser(name);
         if (user != null) {
-            updated = ub.sendPasswordMail(user);
+            boolean updated = ub.sendPasswordMail(user);
+            if (updated) {
+                update = "updated";
+            }
         }
-        if (updated) {
-            update = "updated";
-        }
+
         try {
             json.put("changed", update);
         } catch (JSONException ex) {
