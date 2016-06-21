@@ -346,11 +346,11 @@ public class TaskServices {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/taskbytype")
-    public JSONArray selectTaskByType(@QueryParam("owner") String owner, @QueryParam("type") String type) {
+    public JSONArray selectTaskByType(@QueryParam("user") String user, @QueryParam("type") String type) {
         JSONArray json = new JSONArray();
-        if (owner != null && type != null) {
+        if (user != null && type != null) {
             TaskBusiness tb = new TaskBusiness();
-            List<Task> tasks = tb.selectTasksByType(owner, type);
+            List<Task> tasks = tb.selectTasksByType(user, type);
             if (tasks != null) {
                 for (int i = 0; i < tasks.size(); i++) {
                     JSONObject jo = new JSONObject();
