@@ -50,7 +50,7 @@ public class Achievement {
         }
         JSONObject jo = new JSONObject();
         try {
-            jo.put("exists", inserted);
+            jo.put("insert", inserted);
         } catch (JSONException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }

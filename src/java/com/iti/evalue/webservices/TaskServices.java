@@ -293,8 +293,7 @@ public class TaskServices {
                     jo.put("description", milestone.getDescription());
                     jo.put("startdate", milestone.getStartDate());
                     jo.put("enddate", milestone.getEndDate());
-//                    jo.put("evaluation", milestone.getEvaluation());
-//                    jo.put("progress", milestone.getProgress());
+                    jo.put("total", milestone.getTotal());
                     json.put(jo);
                 } catch (JSONException ex) {
                     Logger.getLogger(TaskServices.class.getName()).log(Level.SEVERE, null, ex);

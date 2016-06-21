@@ -46,8 +46,10 @@ public class TaskBusiness {
                 for (int i = 0; i < membertasklist.size(); i++) {
                     UsersTask mtl = membertasklist.get(i);
                     if (mtl.getTaskId().getParentid() == null) {
-                        if (mtl.getTaskId().getEndDate().compareTo(new Date()) > 0) {
-                            userTasks.add(mtl);
+                        if (!mtl.getTaskId().getTypeId().getName().equals("Individual")) {
+                            if (mtl.getTaskId().getEndDate().compareTo(new Date()) > 0) {
+                                userTasks.add(mtl);
+                            }
                         }
                     }
                 }
@@ -93,7 +95,7 @@ public class TaskBusiness {
             }
             td.taskAdd(task);
             Task t = getTaskByName(task.getName());
-            if(t.getTypeId().getName().equals("Individual")) {
+            if (t.getTypeId().getName().equals("Individual")) {
                 assignUserToTask(t.getOwnerId(), t, t.getOwnerId());
             }
             taskId = t.getId();
@@ -151,10 +153,9 @@ public class TaskBusiness {
                 }
                 if (!exists) {
                     String app;
-                    if(task.getTypeId().getName().equals("Individual")) {
+                    if (task.getTypeId().getName().equals("Individual")) {
                         app = "approved";
-                    }
-                    else {
+                    } else {
                         app = "disapproved";
                     }
                     UsersTask ut = new UsersTask();
@@ -173,8 +174,10 @@ public class TaskBusiness {
                         utm.setApproval(app);
                         utd.addUserToTask(utm);
                     }
-                    String body = owner.getName() + " added you to the task " + task.getName();
-                    Notifier.send(user.getToken(), body);
+                    if (!task.getTypeId().getName().equals("Individual")) {
+                        String body = owner.getName() + " added you to the task " + task.getName();
+                        Notifier.send(user.getToken(), body);
+                    }
                     added = true;
                 }
             }
@@ -235,11 +238,18 @@ public class TaskBusiness {
                     UsersTask ut = utd.selectAssignment(user, ms);
                     if (ut != null) {
                         ut.setAchievement(eval);
-                        ut.setApproval("disapproved");
+                        if (ms.getTypeId().getName().equals("Individual")) {
+                            ut.setApproval("approved");
+                        } else {
+                            ut.setApproval("disapproved");
+                        }
                         utd.updateUsersTask(ut);
-                        String Notificationbody = "user " + user.getName() + " submitted their achievement for milestone "
-                                + ms.getName() + "  of task " + ms.getParentid().getName() + " and is requesting your approval";
-                        Notifier.send(ms.getOwnerId().getToken(), Notificationbody);
+                        if (!ms.getTypeId().getName().equals("Individual")) {
+                            String Notificationbody = "user " + user.getName()
+                                    + " submitted their achievement for milestone " + ms.getName() + "  of task "
+                                    + ms.getParentid().getName() + " and is requesting your approval";
+                            Notifier.send(ms.getOwnerId().getToken(), Notificationbody);
+                        }
                         submitted = true;
                     }
                 }
@@ -295,7 +305,9 @@ public class TaskBusiness {
             }
             for (UsersTask usersTask : o.getUsersTaskList()) {
                 if (usersTask.getTaskId().getTypeId().equals(t) && usersTask.getTaskId().getParentid() == null) {
-                    tasks.add(usersTask.getTaskId());
+                    if (!usersTask.getTaskId().getTypeId().getName().equals("Individual")) {
+                        tasks.add(usersTask.getTaskId());
+                    }
                 }
             }
         }
@@ -314,7 +326,9 @@ public class TaskBusiness {
             }
             for (UsersTask usersTask : u.getUsersTaskList()) {
                 if (usersTask.getTaskId().getParentid() == null) {
-                    tasks.add(usersTask.getTaskId());
+                    if (!usersTask.getTaskId().getTypeId().getName().equals("Individual")) {
+                        tasks.add(usersTask.getTaskId());
+                    }
                 }
             }
         }
@@ -324,7 +338,7 @@ public class TaskBusiness {
     public String checkRole(Task task, String user) {
         String role = "user";
         Users u = ud.selectByUser(user);
-        if(task.getOwnerId().equals(u)) {
+        if (task.getOwnerId().equals(u)) {
             role = "owner";
         }
         return role;
