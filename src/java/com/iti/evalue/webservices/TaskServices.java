@@ -14,6 +14,7 @@ import com.iti.evalue.entities.Category;
 import com.iti.evalue.entities.Task;
 import com.iti.evalue.entities.Type;
 import com.iti.evalue.entities.Users;
+import com.iti.evalue.entities.UsersTask;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -223,8 +224,10 @@ public class TaskServices {
         TaskBusiness tb = new TaskBusiness();
         List<Task> tasks = tb.getUserTasks(name);
         for (int i = 0; i < tasks.size(); i++) {
+            
             JSONObject jo = new JSONObject();
             Task task = (Task) tasks.get(i);
+
             try {
                 jo.put("name", task.getName());
                 jo.put("description", task.getDescription());
@@ -232,8 +235,8 @@ public class TaskServices {
                 jo.put("startdate", task.getStartDate());
                 jo.put("enddate", task.getEndDate());
                 jo.put("type", task.getTypeId().getName());
-//                jo.put("evaluation", task.getEvaluation());
-//                jo.put("progress", task.getProgress());
+                jo.put("total", task.getTotal());
+                //jo.put("approval", );
                 json.put(jo);
             } catch (JSONException ex) {
                 Logger.getLogger(TaskServices.class.getName()).log(Level.SEVERE, null, ex);

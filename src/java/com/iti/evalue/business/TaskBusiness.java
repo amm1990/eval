@@ -38,6 +38,7 @@ public class TaskBusiness {
     public List getUserTasks(String name) {
 
         ArrayList tasks = new ArrayList();
+        //ArrayList approvals = new ArrayList();
         if (name != null) {
             Users user = ud.selectByUser(name);
             if (user != null) {
@@ -47,6 +48,7 @@ public class TaskBusiness {
                     if (task.getParentid() == null) {
                         if (task.getEndDate().compareTo(new Date()) > 0) {
                             tasks.add(task);
+                            
                         }
                     }
                 }
