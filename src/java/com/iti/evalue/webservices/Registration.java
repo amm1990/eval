@@ -44,6 +44,7 @@ public class Registration {
         if (name != null && password != null && gender != null && token != null) {
             if (parentName != null) {
                 parent = ub.viewUser(parentName);
+                System.out.println(parent.getName());
             }
             Users user = new Users(parent, name, password, email, gender, token);
             registered = ub.register(user);
