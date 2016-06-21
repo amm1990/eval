@@ -404,4 +404,16 @@ public class TaskServices {
         }
         return json;
     }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/general statistics")
+    public JSONArray displayAllTasksStatistics(@QueryParam("user") String user) {
+        JSONArray json = new JSONArray();
+        TaskBusiness tb = new TaskBusiness();
+        List<UsersTask> assignments = tb.getUserTasks(user);
+        return json;
+    }
+    
 }
