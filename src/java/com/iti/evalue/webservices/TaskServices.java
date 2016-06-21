@@ -331,6 +331,11 @@ public class TaskServices {
         if (user != null && task != null && approval != null) {
             TaskBusiness tb = new TaskBusiness();
             tb.approveJoinTask(user, task, approval);
+            try {
+                json.put("approval", approval);
+            } catch (JSONException ex) {
+                Logger.getLogger(TaskServices.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return json;
     }

@@ -248,7 +248,7 @@ public class TaskBusiness {
                 utd.updateUsersTask(taskAssignment);
             }
             String body = ms.getOwnerId().getName() + " " + approval + " of your achievement for " + ms.getName()
-                    + " in " + ms.getParentid() + " task";
+                    + " in " + ms.getParentid().getName() + " task";
             Notifier.send(u.getToken(), body);
         }
     }
@@ -261,6 +261,9 @@ public class TaskBusiness {
             if (approval.equals("disapproved")) {
                 UsersTask ut = utd.selectAssignment(u, t);
                 removeUserFromTask(owner, t, u);
+            }
+            else if(approval.equals("approved")) {
+                //check if user exists in list if he doesn't add them
             }
             String body = u.getName() + " " + approval + " of joining " + t.getName() + " task";
             Notifier.send(owner.getToken(), body);
