@@ -392,8 +392,8 @@ public class TaskServices {
                         jo.put("description", task.getDescription());
                         jo.put("category", task.getCategoryId().getName());
                         jo.put("type", task.getTypeId().getName());
-                        jo.put("start_date", task.getStartDate());
-                        jo.put("end_date", task.getEndDate());
+                        jo.put("startdate", task.getStartDate());
+                        jo.put("enddate", task.getEndDate());
                         jo.put("total", task.getTotal());
                         jo.put("role", role);
                         json.put(jo);

@@ -93,6 +93,9 @@ public class TaskBusiness {
             }
             td.taskAdd(task);
             Task t = getTaskByName(task.getName());
+            if(t.getTypeId().getName().equals("Individual")) {
+                assignUserToTask(t.getOwnerId(), t, t.getOwnerId());
+            }
             taskId = t.getId();
         }
         return taskId;
@@ -147,11 +150,19 @@ public class TaskBusiness {
                     }
                 }
                 if (!exists) {
+                    String app;
+                    if(task.getTypeId().getName().equals("Individual")) {
+                        app = "approved";
+                    }
+                    else {
+                        app = "disapproved";
+                    }
                     UsersTask ut = new UsersTask();
                     ut.setUserId(user);
                     ut.setTaskId(task);
                     ut.setAchievement(0);
-                    ut.setApproval("disapproved");
+                    ut.setApproval(app);
+                    ut.setApproval(app);
                     utd.addUserToTask(ut);
                     List<Task> milestones = task.getTaskList();
                     for (int i = 0; i < milestones.size(); i++) {
@@ -159,7 +170,7 @@ public class TaskBusiness {
                         utm.setTaskId(milestones.get(i));
                         utm.setUserId(user);
                         utm.setAchievement(0);
-                        utm.setApproval("disapproved");
+                        utm.setApproval(app);
                         utd.addUserToTask(utm);
                     }
                     String body = owner.getName() + " added you to the task " + task.getName();
