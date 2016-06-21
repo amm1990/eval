@@ -57,5 +57,3 @@ public class Achievement {
         return jo;
     }
 }
-
-
