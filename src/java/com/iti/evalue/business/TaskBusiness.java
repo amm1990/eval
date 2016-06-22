@@ -46,11 +46,9 @@ public class TaskBusiness {
                 for (int i = 0; i < membertasklist.size(); i++) {
                     UsersTask mtl = membertasklist.get(i);
                     if (mtl.getTaskId().getParentid() == null) {
-                        if (!mtl.getTaskId().getTypeId().getName().equals("Individual")) {
                             if (mtl.getTaskId().getEndDate().compareTo(new Date()) > 0) {
                                 userTasks.add(mtl);
                             }
-                        }
                     }
                 }
             }
@@ -58,6 +56,16 @@ public class TaskBusiness {
         return userTasks;
     }
 
+    public List<UsersTask> getUserTeamAndParentTasks(String name) {
+        List<UsersTask> unfiltered = getUserTasks(name);
+        for(int i=0; i < unfiltered.size(); i++) {
+            if(unfiltered.get(i).getTaskId().getTypeId().getName().equals("Individual")) {
+                unfiltered.remove(unfiltered.get(i));
+            }
+        }
+        return unfiltered;
+    }
+    
     public List<Task> getOwnerTasks(String name) {
         ArrayList tasks = null;
         Users user = ud.selectByUser(name);
@@ -342,5 +350,15 @@ public class TaskBusiness {
             role = "owner";
         }
         return role;
+    }
+
+    public List<Users> getTaskUsers(String taskName) {
+        Task task = td.selectByName(taskName);
+        List<UsersTask> assignments = task.getUsersTaskList();
+        List<Users> members = new ArrayList();
+        for(int i=0; i < assignments.size(); i++) {
+            members.add(assignments.get(i).getUserId());
+        }
+        return members;
     }
 }

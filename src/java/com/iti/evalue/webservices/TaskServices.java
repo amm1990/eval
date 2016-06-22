@@ -194,7 +194,8 @@ public class TaskServices {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/removeuser")
-    public JSONObject removeUser(@QueryParam("owner") String owner, @QueryParam("user") String user, @QueryParam("task") String task) {
+    public JSONObject removeUser(@QueryParam("owner") String owner, @QueryParam("user") String user,
+            @QueryParam("task") String task) {
         UserBusiness ub = new UserBusiness();
         TaskBusiness tb = new TaskBusiness();
         JSONObject json = new JSONObject();
@@ -222,10 +223,11 @@ public class TaskServices {
     public JSONArray getUserTasks(@QueryParam("name") String name) {
         JSONArray json = new JSONArray();
         TaskBusiness tb = new TaskBusiness();
-        List<UsersTask> uts = tb.getUserTasks(name);
+        List<UsersTask> uts = tb.getUserTeamAndParentTasks(name);
         for (int i = 0; i < uts.size(); i++) {
             JSONObject jo = new JSONObject();
             Task task = uts.get(i).getTaskId();
+            
             try {
                 jo.put("name", task.getName());
                 jo.put("description", task.getDescription());
@@ -281,9 +283,7 @@ public class TaskServices {
         JSONArray json = new JSONArray();
         TaskBusiness tb = new TaskBusiness();
         List<Task> milestones = tb.getTaskMilestones(name);
-        System.out.println("milestoneis is null");
         if (milestones != null) {
-            System.out.println("milestoneis not null");
             for (int i = 0; i < milestones.size(); i++) {
 
                 JSONObject jo = new JSONObject();
@@ -404,16 +404,49 @@ public class TaskServices {
         }
         return json;
     }
-    
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/general statistics")
+    @Path("/general_statistics")
     public JSONArray displayAllTasksStatistics(@QueryParam("user") String user) {
         JSONArray json = new JSONArray();
         TaskBusiness tb = new TaskBusiness();
         List<UsersTask> assignments = tb.getUserTasks(user);
+        for (int i = 0; i < assignments.size(); i++) {
+            JSONObject jo = new JSONObject();
+            try {
+                jo.put("task", assignments.get(i).getTaskId().getName());
+                jo.put("total", assignments.get(i).getTaskId().getTotal());
+                jo.put("achievement", assignments.get(i).getAchievement());
+                json.put(jo);
+            } catch (JSONException ex) {
+                Logger.getLogger(TaskServices.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         return json;
     }
-    
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/taskusers")
+    public JSONArray getTaskUsers(@QueryParam("taskname") String task) {
+        JSONArray json = new JSONArray();
+        TaskBusiness tb = new TaskBusiness();
+        List<Users> users = tb.getTaskUsers(task);
+        for (int i = 0; i < users.size(); i++) {
+            Users u = users.get(i);
+            JSONObject jo = new JSONObject();
+            try {
+                jo.put("name", u.getName());
+                jo.put("email", u.getEmail());
+                jo.put("gender", u.getGender());
+                json.put(jo);
+            } catch (JSONException ex) {
+                Logger.getLogger(TaskServices.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return json;
+    }
 }
