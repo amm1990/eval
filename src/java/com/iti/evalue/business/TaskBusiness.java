@@ -246,8 +246,17 @@ public class TaskBusiness {
                     UsersTask ut = utd.selectAssignment(user, ms);
                     if (ut != null) {
                         ut.setAchievement(eval);
+                        List<UsersTask> uts = user.getUsersTaskList();
+                        for(int i=0; i<uts.size(); i++) {
+                                if(uts.get(i).getTaskId().equals(ms.getParentid())) {
+                                    System.out.println(uts.get(i).getTaskId());
+                                    uts.get(i).setAchievement(eval + uts.get(i).getAchievement());
+                                    utd.updateUsersTask(uts.get(i));
+                                }
+                            }
                         if (ms.getTypeId().getName().equals("Individual")) {
                             ut.setApproval("approved");
+                            
                         } else {
                             ut.setApproval("disapproved");
                         }
