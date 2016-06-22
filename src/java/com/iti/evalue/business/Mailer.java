@@ -23,8 +23,8 @@ public class Mailer {
 
     public static boolean sendMail(String to, String subject, String body) {
         boolean sent = false;
-        String username = "maedzms@gmail.com";
-        String password = "p2ssw0rd";
+        String username = "evalue.task.management@gmail.com";
+        String password = "evaluemobileapp";
         Properties properties = System.getProperties();
         String host = "smtp.gmail.com";
         properties.put("mail.smtp.starttls.enable", "true");

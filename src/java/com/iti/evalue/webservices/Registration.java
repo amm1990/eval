@@ -63,10 +63,10 @@ public class Registration {
     @Produces(MediaType.APPLICATION_JSON)
     public JSONObject imageCall(@FormParam("image") String image, @FormParam("user") String user) {
         JSONObject json = new JSONObject();
-         if (image != null && user != null) {
-        UserBusiness ub = new UserBusiness();
+        if (image != null && user != null) {
+            UserBusiness ub = new UserBusiness();
             ub.setImage(image, user);
-         }
+        }
         try {
             json.put("inserted", "inserted");
         } catch (JSONException ex) {
@@ -105,7 +105,7 @@ public class Registration {
             JSONObject jo = new JSONObject();
             Users user = subscribers.get(i);
             String imageStringBase64 = "";
-            if(user.getImage() != null) {
+            if (user.getImage() != null) {
                 imageStringBase64 = Base64.encodeBase64String(user.getImage());
             }
             try {
@@ -117,6 +117,33 @@ public class Registration {
                 if (user.getParentId() != null) {
                     jo.put("parent", user.getParentId().getName());
                 }
+                jo.put("image", imageStringBase64);
+                json.put(jo);
+            } catch (JSONException ex) {
+                Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return json;
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/allnormalusers")
+    public JSONArray getUsersWithoutChildren() {
+        JSONArray json = new JSONArray();
+        UserBusiness ub = new UserBusiness();
+        List<Users> users = ub.getUsersWithoutChildren();
+        for (Users user : users) {
+            String imageStringBase64 = "";
+            if (user.getImage() != null) {
+                imageStringBase64 = Base64.encodeBase64String(user.getImage());
+            }
+            JSONObject jo = new JSONObject();
+            try {
+                jo.put("name", user.getName());
+                jo.put("gender", user.getGender());
+                jo.put("email", user.getEmail());
                 jo.put("image", imageStringBase64);
                 json.put(jo);
             } catch (JSONException ex) {

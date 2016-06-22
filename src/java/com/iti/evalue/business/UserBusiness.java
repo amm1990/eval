@@ -9,6 +9,7 @@ import com.iti.evalue.daos.UserDao;
 import com.iti.evalue.entities.Users;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.tomcat.util.codec.binary.Base64;
 
@@ -149,5 +150,11 @@ public class UserBusiness {
 
     public List<Users> selectAllSubscribers() {
         return ud.selectAllUsers();
+    }
+
+    public List<Users> getUsersWithoutChildren() {
+        List<Users> users = new ArrayList();
+        
+        return users;
     }
 }
