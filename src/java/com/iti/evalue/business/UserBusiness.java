@@ -153,8 +153,13 @@ public class UserBusiness {
     }
 
     public List<Users> getUsersWithoutChildren() {
-        List<Users> users = new ArrayList();
-        
-        return users;
+        List<Users> filter = new ArrayList();
+        List<Users> users = ud.selectAllUsers();
+        for (Users user : users) {
+            if(user.getParentId() == null) {
+                filter.add(user);
+            }
+        }
+        return filter;
     }
 }
