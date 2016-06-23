@@ -227,7 +227,7 @@ public class TaskServices {
         for (int i = 0; i < uts.size(); i++) {
             JSONObject jo = new JSONObject();
             Task task = uts.get(i).getTaskId();
-            
+
             try {
                 jo.put("name", task.getName());
                 jo.put("description", task.getDescription());
@@ -448,5 +448,30 @@ public class TaskServices {
             }
         }
         return json;
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/taskbyname")
+    public JSONObject getTaskByName(@QueryParam("task") String name) {
+
+        JSONObject jo = new JSONObject();
+        TaskBusiness tb = new TaskBusiness();
+        Task task = tb.getTaskByName(name);
+        try {
+            jo.put("name", task.getName());
+            jo.put("description", task.getDescription());
+            jo.put("startdate", task.getStartDate());
+            jo.put("enddate", task.getEndDate());
+            jo.put("category", task.getCategoryId().getName());
+            jo.put("type", task.getTypeId().getName());
+            jo.put("total", task.getTotal());
+            jo.put("owner", task.getOwnerId().getName());
+
+        } catch (JSONException ex) {
+            Logger.getLogger(TaskServices.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return jo;
     }
 }
