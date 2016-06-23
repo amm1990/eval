@@ -49,6 +49,9 @@ public class Registration {
             Users user = new Users(parent, name, password, email, gender, token);
             registered = ub.register(user);
         }
+//        if(registered.equals("success")) {
+//            
+//        }
 
         try {
             registration.put("status", registered);

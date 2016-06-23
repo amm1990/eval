@@ -112,6 +112,7 @@ public class TaskServices {
         Task milestone = null;
         float milestoneTotal;
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        String date_validations = "valid";
         if (name != null && description != null && startDate != null && endDate != null
                 && parentTask != null && total != null) {
 
@@ -130,10 +131,17 @@ public class TaskServices {
                 milestoneTotal = 0;
             }
             if (milestoneTotal != 0 && sDate != null && eDate != null && parent != null) {
-                Category category = parent.getCategoryId();
-                Type type = parent.getTypeId();
-                Users owner = parent.getOwnerId();
-                milestone = new Task(name, description, category, type, sDate, eDate, milestoneTotal, owner, parent);
+                if (eDate.before(parent.getEndDate())) {
+                    //for (int i = 0; i < parent.getTaskList().size(); i++) {
+                        
+                        Category category = parent.getCategoryId();
+                        Type type = parent.getTypeId();
+                        Users owner = parent.getOwnerId();
+                        milestone = new Task(name, description, category, type, sDate, eDate, milestoneTotal, owner, parent);
+                    //}
+                } else {
+                    date_validations = "enddate";
+                }
             }
         }
         if (milestone != null) {
@@ -142,6 +150,7 @@ public class TaskServices {
 
         try {
             json.put("id", milestoneId);
+            json.put("valid_dates", date_validations);
         } catch (JSONException ex) {
             Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -284,16 +293,21 @@ public class TaskServices {
         TaskBusiness tb = new TaskBusiness();
         List<Task> milestones = tb.getTaskMilestones(name);
         if (milestones != null) {
+            
             for (int i = 0; i < milestones.size(); i++) {
-
                 JSONObject jo = new JSONObject();
                 Task milestone = milestones.get(i);
+                String inputStart = milestone.getStartDate().toString();
+                String outputStart = inputStart.substring(0, 10);
+                String inputEnd = milestone.getEndDate().toString();
+                String outputEnd = inputEnd.substring(0, 10);
+                System.out.println(outputStart + " " + outputEnd);
                 try {
                     jo.put("name", milestone.getName());
                     jo.put("description", milestone.getDescription());
-                    jo.put("startdate", milestone.getStartDate());
+                    jo.put("startdate", outputStart);
                     jo.put("enddate", milestone.getEndDate());
-                    jo.put("total", milestone.getTotal());
+                    jo.put("total", outputEnd);
                     json.put(jo);
                 } catch (JSONException ex) {
                     Logger.getLogger(TaskServices.class.getName()).log(Level.SEVERE, null, ex);
