@@ -267,12 +267,16 @@ public class TaskServices {
             for (int i = 0; i < tasks.size(); i++) {
                 JSONObject jo = new JSONObject();
                 Task task = (Task) tasks.get(i);
+                String inputStart = task.getStartDate().toString();
+                String outputStart = inputStart.substring(0, 10);
+                String inputEnd = task.getEndDate().toString();
+                String outputEnd = inputEnd.substring(0, 10);
                 try {
                     jo.put("name", task.getName());
                     jo.put("description", task.getDescription());
                     jo.put("category", task.getCategoryId().getName());
-                    jo.put("startdate", task.getStartDate());
-                    jo.put("enddate", task.getEndDate());
+                    jo.put("startdate", outputStart);
+                    jo.put("enddate", outputEnd);
                     jo.put("type", task.getTypeId().getName());
                     jo.put("total", task.getTotal());
                     json.put(jo);
@@ -306,8 +310,8 @@ public class TaskServices {
                     jo.put("name", milestone.getName());
                     jo.put("description", milestone.getDescription());
                     jo.put("startdate", outputStart);
-                    jo.put("enddate", milestone.getEndDate());
-                    jo.put("total", outputEnd);
+                    jo.put("enddate", outputEnd);
+                    jo.put("total", milestone.getTotal());
                     json.put(jo);
                 } catch (JSONException ex) {
                     Logger.getLogger(TaskServices.class.getName()).log(Level.SEVERE, null, ex);
