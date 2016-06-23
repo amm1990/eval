@@ -49,16 +49,29 @@ public class Registration {
             Users user = new Users(parent, name, password, email, gender, token);
             registered = ub.register(user);
         }
-//        if(registered.equals("success")) {
-//            
-//        }
-
         try {
             registration.put("status", registered);
         } catch (JSONException ex) {
             Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
         }
         return registration;
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/confirmregistration")
+    public JSONObject confirmRegistration(@QueryParam("confirmation") String conf, @QueryParam("user") String user) {
+        JSONObject jo = new JSONObject();
+        if(conf != null && user != null) {
+            UserBusiness ub = new UserBusiness();
+            Users u = ub.viewUser(user);
+            
+            if(conf.equals("correct")) {
+                
+            }
+        }
+        return jo;
     }
 
     @POST
