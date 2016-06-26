@@ -43,10 +43,10 @@ public class UserBusiness {
                 result = "name";
             } else if (u1 == null && u2 == null) {
                 ud.userAdd(u);
-                String code = new BigInteger(30, new SecureRandom()).toString(32);
-                Mailer.sendMail(u.getEmail(), "eValue registration code", "this mail was sent to "
-                        + "verify your evalue mobile app registration, please enter the code "
-                        + "in your mobile to complete your registration process." + "  Registration code: " + code);
+//                String code = new BigInteger(30, new SecureRandom()).toString(32);
+//                Mailer.sendMail(u.getEmail(), "eValue registration code", "this mail was sent to "
+//                        + "verify your evalue mobile app registration, please enter the code "
+//                        + "in your mobile to complete your registration process." + "  Registration code: " + code);
                 result = "success";
             }
         }

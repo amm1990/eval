@@ -112,7 +112,6 @@ public class TaskServices {
         Task milestone = null;
         float milestoneTotal;
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-        String date_validations = "valid";
         if (name != null && description != null && startDate != null && endDate != null
                 && parentTask != null && total != null) {
 
@@ -124,23 +123,24 @@ public class TaskServices {
                 Logger.getLogger(TaskServices.class.getName()).log(Level.SEVERE, null, ex);
                 sDate = null;
                 eDate = null;
+                System.out.println("wrong dates");
             }
             try {
                 milestoneTotal = Float.parseFloat(total);
             } catch (Exception ex) {
                 milestoneTotal = 0;
+                System.out.println("wrong total");
             }
             if (milestoneTotal != 0 && sDate != null && eDate != null && parent != null) {
                 if (eDate.before(parent.getEndDate())) {
                     //for (int i = 0; i < parent.getTaskList().size(); i++) {
-                        
+                        System.out.println("both correct");
                         Category category = parent.getCategoryId();
                         Type type = parent.getTypeId();
                         Users owner = parent.getOwnerId();
                         milestone = new Task(name, description, category, type, sDate, eDate, milestoneTotal, owner, parent);
                     //}
                 } else {
-                    date_validations = "enddate";
                 }
             }
         }
@@ -150,7 +150,6 @@ public class TaskServices {
 
         try {
             json.put("id", milestoneId);
-            json.put("valid_dates", date_validations);
         } catch (JSONException ex) {
             Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
         }
